@@ -16,6 +16,7 @@ export default function MyDocument(props: DocumentProps & DocumentHeadTagsProps)
         <link rel="shortcut icon" href="/favicon.ico" />
         <meta name="emotion-insertion-point" content="" />
         <DocumentHeadTags {...props} />
+        <link rel="stylesheet" href="/App.css" />
       </Head>
       <body>
         <Main />
