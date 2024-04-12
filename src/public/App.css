@@ -1,0 +1,8 @@
+body {
+  background-color: #ebebeb;
+}
+
+.MuiButton-containedPrimary{
+  background-color: #444a65!important;
+  color: white!important;
+}
