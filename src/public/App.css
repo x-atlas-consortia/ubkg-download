@@ -1,8 +1,13 @@
 body {
   background-color: #ebebeb;
+  font-family:  Inter Variable, Helvetica, Arial, sans-serif;
 }
 
 .MuiButton-containedPrimary{
   background-color: #444a65!important;
   color: white!important;
+}
+
+.containerBox{
+  margin-top: 60px;
 }

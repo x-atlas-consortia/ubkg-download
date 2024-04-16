@@ -38,4 +38,7 @@
 /src/next-env.d.ts
 
 # vscode
-/src/.vscode
+.vscode
+
+# package lock
+/src/package-lock.json

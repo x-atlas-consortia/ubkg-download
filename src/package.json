@@ -16,9 +16,13 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
+    "axios": "^1.6.8",
+    "cors": "^2.8.5",
+    "material-file-icons": "^2.4.0",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-spinners": "^0.13.8"
   },
   "devDependencies": {
     "@types/node": "latest",

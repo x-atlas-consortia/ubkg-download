@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
+// import configMode from "../fileConfig";
 
 export async function GET({req: NextRequest}) {
- 
   const result = {
     message: "working",
   };
@@ -11,38 +11,26 @@ export async function GET({req: NextRequest}) {
 }
 
 
-export async function reqAuth(req, res) {
-    return true;
-    // if (req.method === 'GET') {
-    //     // check for the Authorization header
-    //     const authHeader = req.headers.authorization || ''
-    //     const authParts = authHeader.split(' ')
-    //     if (authParts.length !== 2 || authParts[0] !== 'Bearer') {
-    //         return res.status(401).json({ active: false })
-    //     }
+export async function KeyAPI(umlsKey) {
+    
+    //@TODO:  ACTIVATE THEY KEY ATTACHMENT TO THE UMLS URL HERE
+    // let url = process.env.NEXT_PUBLIC_IAPIURL+umlsKey
+    let url = process.env.NEXT_PUBLIC_IAPIURL
+    let headers = {"Content-Type":"application/json"}
 
-    //     let headers = new Headers()
-    //     headers.append('Authorization', 'Basic ' + process.env.GLOBUS_TOKEN)
-    //     headers.append('Content-Type', 'application/x-www-form-urlencoded')
+    console.debug('%c◉ KeyAPI umlsKey ', 'color:#00ff7b', umlsKey);
+    console.debug('%c◉ url ', 'color:#00ff7b', url);
 
-    //     let formBody = 'token=' + authParts[1]
-
-    //     let url = 'https://auth.globus.org/v2/oauth2/token/introspect'
-    //     return await fetch(url, {
-    //         method: 'POST',
-    //         headers: headers,
-    //         body: formBody
-    //     })
-    //         .then((response) => response.json())
-    //         .then((response) => {
-    //             if (response.active) {
-    //                 res.status(200).json({ active: response.active })
-    //             } else {
-    //                 res.status(401).json({ active: response.active })
-    //             }
-    //         })
-    //         .catch(() => {
-    //             res.status(401).json({ active: false })
-    //         })
-    // }
+    return await fetch(
+        url, {
+        method: "GET",
+        headers: headers,
+    })
+    .then(result => {
+        console.debug('%c◉ KeyAPI result ', 'color:#00ff7b', result);
+        return result;
+    }).catch(error => {
+        console.debug('%c◉ KeyAPI error ', 'color:#00ff7b', error);
+        return error;
+    });
 }
