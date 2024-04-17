@@ -88,11 +88,13 @@ const Home = (props) => {
   function fileGet() {
     FileList(umlsKey)
     .then((res) => {
-      console.debug('%c◉ Filelist Success ', 'color:#c3fd7b', res);
+      console.debug('%c◉ fileGet Success ', 'color:#c3fd7b', res);
       // @TODO: If you have to switch from using DATA to using RESPONSE in FileList
       // You will likelly need to extract the actual json from the request here
       // Something like req.response.data or req.data 
-      setFileList(res)
+      var fileJson = JSON.parse(res) 
+      console.debug('%c◉ fileJson ', 'color:#00ff7b', fileJson);
+      setFileList(fileJson)
       setValidState(true)
     })
     .catch((err) => {
