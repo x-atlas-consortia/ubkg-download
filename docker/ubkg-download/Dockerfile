@@ -26,12 +26,15 @@ RUN curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && \
 WORKDIR /usr/src/app/src
 
 # Install npm dependencies and build app
-RUN npm install && \
-    npm run build
+#RUN npm install && \
+#    npm run build
+
+RUN npm install
 
 # The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime. 
 EXPOSE 3000
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
-CMD ["npm", "run", "start"]
+#CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]

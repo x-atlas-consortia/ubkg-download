@@ -129,7 +129,7 @@ const Home = (props) => {
   function renderInvalidView() {
     return( 
       <Alert severity="error">
-        <Typography> Invalid UMLS License Key. Please obtain  a valid license key at: https://uts.nlm.nih.gov</Typography> <br /><br />
+        <Typography> Invalid UMLS License Key. Please obtain a valid license key at: <a href="https://uts.nlm.nih.gov" target="_blank">https://uts.nlm.nih.gov</a></Typography> <br /><br />
         <Button variant="contained" onClick={reload}>Try Again</Button>
       </Alert>
     );
@@ -162,7 +162,7 @@ const Home = (props) => {
                   >
                   <TableCell  width={"50px"} align="left">{ fileIcon(row.name)}</TableCell>
                   <TableCell component="th" scope="row">
-                    <a href={'https://assets.hubmapconsortium.org/umls-download/'+row.name+'?umls-key='+umlsKey}>{row.name}</a>
+                    <a href={'https://assets.hubmapconsortium.org/ubkg-download/'+row.name+'?umls-key='+umlsKey}>{row.name}</a>
                   </TableCell>
                   <TableCell  width={"50px"} align="left">{row.size}</TableCell>
                   <TableCell align="left">{row.description}</TableCell>
@@ -177,14 +177,14 @@ const Home = (props) => {
 
   function renderLoginView() {
     return (
-      <Paper elevation={0} sx={{margin:"20px auto", padding:"20px 50px", maxWidth:"1000px"}}>
+      <Paper elevation={0} sx={{margin:"20px auto", padding:"20px 20px", maxWidth:"1000px"}}>
         <Grid
           container
           spacing={3}
           sx={{display:"flex",justifyContent:"flex-start",textAlign:"left"}}>
           <Grid item xs={6}>
-            <Typography> Please provide your UMLS Key to access your Files </Typography>
-            <Typography> To acquire a valid licence key, <br />Please visit: <a href="https://uts.nlm.nih.gov" target="_blank">https://uts.nlm.nih.gov</a></Typography> 
+            <Typography> Please provide your UMLS Key to access the downloadble files </Typography>
+            <Typography> To acquire a valid licence key, please visit: <a href="https://uts.nlm.nih.gov" target="_blank">https://uts.nlm.nih.gov</a></Typography> 
           </Grid>              
           <Grid item xs={6}>
             <TextField 
@@ -213,7 +213,7 @@ const Home = (props) => {
         
         {validState === true && authState === true && fileList.length !== 0 &&(
           <>
-            <Typography sx={{color:"rgb(99, 99, 99)"}}> Your Files: </Typography>
+            <Typography sx={{color:"rgb(99, 99, 99)"}}> Files: </Typography>
             {renderTable()}
           </>
         )}
@@ -228,7 +228,7 @@ const Home = (props) => {
       <Navigation />
       <Container maxWidth="lg" className="containerBox">
         <Box sx={{padding: "20px 30px;", margin:"30px auto"}}> 
-          <Typography sx={{fontWeight: 300,fontSize: "2.3rem"}}>UMLS Downloads</Typography>
+          <Typography sx={{fontWeight: 300,fontSize: "2.3rem"}}>UBKG Download</Typography>
           <>{renderLoginView()}</>        
         </Box>
       </Container>
