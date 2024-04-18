@@ -19,6 +19,7 @@ export async function FileList(umlsKey) {
     let headers = {"Content-Type":"application/json"}
     console.debug('%c◉ fileList url ', 'color:#00ff7b', url);
 
+
  /*   if(process.env.NEXT_PUBLIC_MODE == "test"){
       return files
    }else{*/
@@ -33,10 +34,10 @@ export async function FileList(umlsKey) {
       // Result should be correct for the API Response
       
       // RESULT
-      /*.then(result => {
+      .then(result => {
          console.debug('%c◉ fileList result ', 'color:#00ff7b', result);
          return result;
-      })*/
+      })
       
       
       .then(function(response) {
@@ -56,18 +57,3 @@ export async function FileList(umlsKey) {
     
 //}
 
-
-var files =  [
-   {
-       "name": "test-file1.txt",
-       "size": "10M",
-       "description": "A test file..."
-   },{
-       "name": "test-file2.zip",
-       "size": "894M",
-       "description": "A second test file..."
-   },{
-       "name": "test-file3.txt",
-       "size": "456K"
-   }
-]

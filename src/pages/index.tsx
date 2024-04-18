@@ -59,7 +59,7 @@ const Home = (props) => {
     console.debug('%c◉ umlsKey ', 'color:#00ff7b', umlsKey);
     KeyAPI(umlsKey)
       .then((res) => {
-        // console.log(res)
+        console.log(res)
         //@TODO:  Here's where we check if they umls key is true
         // Currently just verifies we get the usual hello back from ingest API, 
         // A 200 response should likewise work regardless, 
@@ -143,6 +143,8 @@ const Home = (props) => {
       return (<GridLoader color="#36d7b7" />);
     }else{
       console.debug('%c◉ fileList ', 'color:#00ff7b', fileList);
+      let assets_url_base = `${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}`
+
       return (
         <TableContainer component={Paper} sx={{ minWidth: "550px" }}>
           <Table size="small"  aria-label="simple table">
@@ -162,7 +164,7 @@ const Home = (props) => {
                   >
                   <TableCell  width={"50px"} align="left">{ fileIcon(row.name)}</TableCell>
                   <TableCell component="th" scope="row">
-                    <a href={'https://assets.hubmapconsortium.org/ubkg-download/'+row.name+'?umls-key='+umlsKey}>{row.name}</a>
+                    <a href={assets_url_base + row.name+'?umls-key='+umlsKey}>{row.name}</a>
                   </TableCell>
                   <TableCell  width={"50px"} align="left">{row.size}</TableCell>
                   <TableCell align="left">{row.description}</TableCell>
@@ -227,8 +229,7 @@ const Home = (props) => {
     <Box > 
       <Navigation />
       <Container maxWidth="lg" className="containerBox">
-        <Box sx={{padding: "20px 30px;", margin:"30px auto"}}> 
-          <Typography sx={{fontWeight: 300,fontSize: "2.3rem"}}>UBKG Download</Typography>
+        <Box sx={{padding: "20px 20px;", margin:"30px auto"}}> 
           <>{renderLoginView()}</>        
         </Box>
       </Container>

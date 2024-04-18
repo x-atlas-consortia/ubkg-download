@@ -30,11 +30,9 @@ export default function Navigation (props : { children : string }) {
 
   function renderAccountMenu() {
     console.debug('%c◉ umlsKey ', 'color:#00ff7b', umlsKey);
-    // var [umlsKey] = useState(props.umlsKey ? props.umlsKey() : null;);
+    // var umlsKey = useState(props.umlsKey ? props.umlsKey() : null;);
     if(umlsKey!== ""){
-      return  ( <Typography >Your Key: {umlsKey}</Typography>)
-    }else{
-      return  (<Button color="inherit">Login</Button>)
+      return  ( <Typography >Your UMLS Key: {umlsKey}</Typography>)
     }
 }
     
@@ -47,7 +45,7 @@ export default function Navigation (props : { children : string }) {
  
               <Box sx={{ float:"left"}}>
                 <Typography >
-                  <a className="navbar-brand" href="/">
+                  <a className="navbar-brand d-inline-block" href="/">
                     <img
                       src="https://hubmapconsortium.org/wp-content/uploads/2020/09/hubmap-type-white250.png"
                       height="40"
@@ -56,13 +54,14 @@ export default function Navigation (props : { children : string }) {
                       alt="HuBMAP logo"
                     />
                   </a>
+                  <span>UBKG Download</span>
                 </Typography>
               </Box>
-              {/* 
+              {
                 <Box sx={{float:"right"}}>
                 {renderAccountMenu()}
               </Box>
-              */} 
+              } 
           </Toolbar>
         </Container>
       </AppBar>
