@@ -20,9 +20,6 @@ services:
       - HOST_UID=${HOST_UID:-1001}
     init: true
     restart: always
-    volumes:
-      # Mount the logging to container
-      - "../log:/usr/src/app/log"
     networks:
       - gateway_hubmap
 
