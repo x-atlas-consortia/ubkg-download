@@ -27,30 +27,33 @@ import Toolbar from "@mui/material/Toolbar";
 
 const Home = (props) => {
     // var [serverMode, setServerMode] = useState("test");
-    var [umlsKey, setUmlsKey] = useState("");
+    var [umlsKey, setUmlsKey] = useState('');
     var [authState, setAuthState] = useState(false);
     var [inputDisabled, setInputDisabled] = useState(false);
     var [validState, setValidState] = useState(false);
     var [fileList, setFileList] = useState([]);
     const router = useRouter();
 
+    const isMounted = useRef(false);
+
     useEffect(() => {
         var ls = localStorage.getItem("umlsKey");
         console.debug("%c◉ ls ", "color:#00ff7b", ls);
         if (ls && ls !== "") {
             console.debug("%c◉ LS Not Empty ", "color:#00ff7b", ls);
-            setUmlsKey(localStorage.getItem("umlsKey") || "");
+            setUmlsKey(ls);
             authCheck();
-        } else if (ls && ls === "") {
-            console.debug("%c◉ LS EMPTY ", "color:#00ff7b", ls);
-            setAuthState(false);
-            setValidState(false);
-        } else {
-            console.debug("%c◉ NO LS ", "color:#00ff7b");
-            //setAuthState(false)
-            //setValidState(false)
         }
     }, []);
+
+    useEffect(() => {
+        // Don't store on initial render
+        if (isMounted.current) {
+            localStorage.setItem("umlsKey", umlsKey);
+        } else {
+            isMounted.current = true;
+        }
+    }, [umlsKey]);
 
     function authCheck() {
         console.debug("%c◉ umlsKey ", "color:#00ff7b", umlsKey);
@@ -70,9 +73,6 @@ const Home = (props) => {
                     );
 
                     setInputDisabled(true);
-
-                    localStorage.setItem("umlsKey", umlsKey);
-
                     setAuthState(true);
                     // Now that we're Valid, lets get the Files
                     fileGet();
