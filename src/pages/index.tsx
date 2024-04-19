@@ -79,13 +79,13 @@ const Home = (props) => {
                 } else if (res.status === 403 || res.status === 401) {
                     // 401 / 403
                     console.debug(
-                        "%c◉ Invalid jey provided to KeyAPI in index ",
+                        "%c◉ Invalid key provided to KeyAPI in index ",
                         "color:#00ff7b",
                         res.status,
                     );
                     // How we'll handle other res, such as the invalids
                     setValidState(false);
-                    setAuthState(true);
+                    setAuthState(false);
                 } else {
                     throw new Error();
                 }
@@ -136,23 +136,20 @@ const Home = (props) => {
     }
 
     function renderInvalidView() {
-        return (
-            <Alert severity="error">
-                <Typography>
-                    {" "}
-                    Invalid UMLS License Key. Please obtain a valid license key
-                    at:{" "}
-                    <a href="https://uts.nlm.nih.gov" target="_blank">
-                        https://uts.nlm.nih.gov
-                    </a>
-                </Typography>{" "}
-                <br />
-                <br />
-                <Button variant="contained" onClick={reset}>
-                    Try Again
-                </Button>
-            </Alert>
-        );
+        if (validState === false && authState === false) {
+            return (
+                <Alert severity="error">
+                    <Typography>
+                        {" "}
+                        Invalid UMLS License Key. Please obtain a valid license key at:{" "}
+                        <a href="https://uts.nlm.nih.gov" target="_blank">https://uts.nlm.nih.gov</a>
+                    </Typography>{" "}
+                    <br />
+                    <br />
+                    <Button variant="contained" onClick={reset}>Try Again</Button>
+                </Alert>
+            );
+        }
     }
 
     function renderTable() {
@@ -190,16 +187,7 @@ const Home = (props) => {
                                         {fileIcon(row.name)}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        <a
-                                            href={
-                                                assets_url_base +
-                                                row.name +
-                                                "?umls-key=" +
-                                                umlsKey
-                                            }
-                                        >
-                                            {row.name}
-                                        </a>
+                                        <a href={assets_url_base + row.name + "?umls-key=" + umlsKey}>{row.name}</a>
                                     </TableCell>
                                     <TableCell width={"50px"} align="left">
                                         {row.size}
@@ -218,35 +206,17 @@ const Home = (props) => {
 
     function renderLoginView() {
         return (
-            <Paper
-                elevation={0}
-                sx={{
-                    margin: "20px auto",
-                    padding: "20px 20px",
-                    maxWidth: "1000px",
-                }}
-            >
-                <Grid
-                    container
-                    spacing={3}
-                    sx={{
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        textAlign: "left",
-                    }}
-                >
+            <Paper elevation={0} sx={{ margin: "20px auto", padding: "20px 20px", maxWidth: "1000px",}}>
+                <Grid container spacing={3} sx={{display: "flex", justifyContent: "flex-start", textAlign: "left",}}>
                     <Grid item xs={6}>
                         <Typography>
                             {" "}
-                            Please provide your UMLS Key to access the
-                            downloadble files{" "}
+                            Please provide your UMLS Key to access the downloadble files{" "}
                         </Typography>
                         <Typography>
                             {" "}
                             To acquire a valid licence key, please visit:{" "}
-                            <a href="https://uts.nlm.nih.gov" target="_blank">
-                                https://uts.nlm.nih.gov
-                            </a>
+                            <a href="https://uts.nlm.nih.gov" target="_blank">https://uts.nlm.nih.gov</a>
                         </Typography>
                     </Grid>
 
@@ -265,14 +235,8 @@ const Home = (props) => {
                             onChange={updateKey}
                         />{" "}
                         <br /> <br />
-                        {authState === false && (
-                            <Button
-                                variant="contained"
-                                onClick={authCheck}
-                                sx={{ float: "right" }}
-                            >
-                                Submit
-                            </Button>
+                        {validState === false && authState === false && (
+                            <Button variant="contained" onClick={authCheck} sx={{ float: "right" }}>Submit</Button>
                         )}
                     </Grid>
                 </Grid>
@@ -285,9 +249,7 @@ const Home = (props) => {
                     authState === true &&
                     fileList.length !== 0 && (
                         <>
-                            <Typography sx={{ marginBottom: "20px" }}>
-                                Downloadable Files:{" "}
-                            </Typography>
+                            <Typography sx={{ marginBottom: "20px" }}>Downloadable Files:{" "}</Typography>
                             {renderTable()}
                         </>
                     )}
@@ -296,16 +258,8 @@ const Home = (props) => {
     }
 
     function logout() {
-        if (umlsKey !== "" && authState === true) {
-            return (
-                <Button
-                    variant="contained"
-                    onClick={reset}
-                    sx={{ float: "right" }}
-                >
-                    Logout
-                </Button>
-            );
+        if (umlsKey !== "" && validState === true && authState === true) {
+            return (<Button variant="contained" onClick={reset} sx={{ float: "right" }}>Logout</Button>);
         }
     }
 
@@ -313,9 +267,7 @@ const Home = (props) => {
         return (
             <AppBar id="header" sx={{ backgroundColor: "#444a65" }}>
                 <Toolbar variant="dense">
-                    <Box>
-                        <h1>UBKG Download</h1>
-                    </Box>
+                    <Box><h1>UBKG Download</h1></Box>
                     {<Box style={{ flex: 1 }}>{logout()}</Box>}
                 </Toolbar>
             </AppBar>

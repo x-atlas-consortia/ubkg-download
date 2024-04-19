@@ -19,7 +19,7 @@ docker/ubkg-download/log
 **/*.log*
 
 # UI react-app
-src/node_modules
+**/node_modules
 src/.pnp
 src/.pnp.js
 src/package-lock.json
