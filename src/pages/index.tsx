@@ -19,7 +19,6 @@ import TableRow from "@mui/material/TableRow";
 import Alert from "@mui/material/Alert";
 import GridLoader from "react-spinners/GridLoader";
 import { getIcon } from "material-file-icons";
-import { useRouter } from "next/router";
 import { KeyAPI } from "../api/auth";
 import { FileList } from "../api/files";
 import AppBar from "@mui/material/AppBar";
@@ -28,14 +27,14 @@ import Toolbar from "@mui/material/Toolbar";
 const Home = (props) => {
     // var [serverMode, setServerMode] = useState("test");
     var [umlsKey, setUmlsKey] = useState('');
-    var [authState, setAuthState] = useState(false);
-    var [showError, setShowError] = useState(false);
+    var [hasAuth, setHasAuth] = useState(false);
+    var [error, setError] = useState('');
     var [inputDisabled, setInputDisabled] = useState(false);
     var [fileList, setFileList] = useState([]);
-    const router = useRouter();
 
     useEffect(() => {
         const ls = localStorage.getItem("umlsKey");
+
         if (ls) {
             setUmlsKey(ls);
         }
@@ -48,11 +47,11 @@ const Home = (props) => {
     }, [umlsKey]);
 
     function authCheck() {
-        console.log("%c◉ umlsKey ", "color:#00ff7b", umlsKey);
+        console.debug("%c◉ umlsKey ", "color:#00ff7b", umlsKey);
 
         KeyAPI(umlsKey)
             .then((res) => {
-                console.log(res);
+                console.debug(res);
                 //@TODO:  Here's where we check if they umls key is true
                 // Currently just verifies we get the usual hello back from ingest API,
                 // A 200 response should likewise work regardless,
@@ -67,27 +66,28 @@ const Home = (props) => {
                     localStorage.setItem("umlsKey", umlsKey);
 
                     setInputDisabled(true);
-                    setAuthState(true);
-                    setShowError(false);
+                    setHasAuth(true);
+                    setError('');
 
                     // Now that we're Valid, lets get the Files
                     fileGet();
                 } else if (res.status === 403 || res.status === 401) {
                     // 401 / 403
                     console.debug(
-                        "%c◉ Invalid key provided to KeyAPI in index ",
+                        "%c◉ Invalid key provided to KeyAPI ",
                         "color:#00ff7b",
                         res.status,
                     );
                     // How we'll handle other res, such as the invalids
-                    setAuthState(false);
-                    setShowError(true);
+                    setHasAuth(false);
+                    setError('Invalid UMLS License Key');
                 } else {
                     throw new Error();
                 }
             })
             .catch((err) => {
                 console.log(err);
+                setError('The server encountered an internal error and was unable to complete your request')
             });
     }
 
@@ -111,9 +111,10 @@ const Home = (props) => {
         console.debug("%c◉ reset ", "color:#00ff7b");
 
         localStorage.removeItem("umlsKey");
-        setUmlsKey("");
-        setAuthState(false);
+        setUmlsKey('');
+        setHasAuth(false);
         setInputDisabled(false);
+        setError('');
     }
 
     function updateKey(event) {
@@ -129,11 +130,12 @@ const Home = (props) => {
         );
     }
 
-    function renderInvalidView() {
-        return (
-            <Alert sx={{marginTop: "20px"}} severity="error">Invalid UMLS License Key</Alert>
-
-        );
+    function renderError(errorMsg) {
+        if (errorMsg) {
+            return (
+                <Alert sx={{marginTop: "20px"}} severity="error">{errorMsg}</Alert>
+            );
+        }
     }
 
     function renderTable() {
@@ -223,20 +225,17 @@ const Home = (props) => {
                             onChange={updateKey}
                         />{" "}
                         <br /> <br />
-                        {authState === false && (
+                        { ! hasAuth && (
                             <Button variant="contained" onClick={authCheck} sx={{ float: "right" }}>Submit</Button>
                         )}
                     </Grid>
                 </Grid>
 
-                {showError === true && (
-                    <>{renderInvalidView()}</>
-                )}
+                <>{renderError(error)}</>
 
-                {authState === true &&
-                    fileList.length !== 0 && (
+                {hasAuth && fileList.length > 0 && (
                         <>
-                            <Typography sx={{ marginBottom: "20px" }}>Downloadable Files:{" "}</Typography>
+                            <Typography sx={{ marginBottom: "20px" }}>Downloadable Files ({fileList.length}):</Typography>
                             {renderTable()}
                         </>
                     )}
@@ -245,7 +244,7 @@ const Home = (props) => {
     }
 
     function logout() {
-        if (authState === true) {
+        if (hasAuth) {
             return (<Button variant="contained" onClick={reset} sx={{ float: "right" }}>Logout</Button>);
         }
     }
