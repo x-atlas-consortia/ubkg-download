@@ -29,34 +29,26 @@ const Home = (props) => {
     // var [serverMode, setServerMode] = useState("test");
     var [umlsKey, setUmlsKey] = useState('');
     var [authState, setAuthState] = useState(false);
+    var [showError, setShowError] = useState(false);
     var [inputDisabled, setInputDisabled] = useState(false);
-    var [validState, setValidState] = useState(false);
     var [fileList, setFileList] = useState([]);
     const router = useRouter();
 
-    const isMounted = useRef(false);
-
     useEffect(() => {
-        var ls = localStorage.getItem("umlsKey");
-        console.debug("%c◉ ls ", "color:#00ff7b", ls);
-        if (ls && ls !== "") {
-            console.debug("%c◉ LS Not Empty ", "color:#00ff7b", ls);
+        const ls = localStorage.getItem("umlsKey");
+        if (ls) {
             setUmlsKey(ls);
-            authCheck();
         }
     }, []);
 
     useEffect(() => {
-        // Don't store on initial render
-        if (isMounted.current) {
+        if (umlsKey) {
             localStorage.setItem("umlsKey", umlsKey);
-        } else {
-            isMounted.current = true;
         }
     }, [umlsKey]);
 
     function authCheck() {
-        console.debug("%c◉ umlsKey ", "color:#00ff7b", umlsKey);
+        console.log("%c◉ umlsKey ", "color:#00ff7b", umlsKey);
 
         KeyAPI(umlsKey)
             .then((res) => {
@@ -71,9 +63,13 @@ const Home = (props) => {
                         "color:#00ff7b",
                         res,
                     );
+                    
+                    localStorage.setItem("umlsKey", umlsKey);
 
                     setInputDisabled(true);
                     setAuthState(true);
+                    setShowError(false);
+
                     // Now that we're Valid, lets get the Files
                     fileGet();
                 } else if (res.status === 403 || res.status === 401) {
@@ -84,8 +80,8 @@ const Home = (props) => {
                         res.status,
                     );
                     // How we'll handle other res, such as the invalids
-                    setValidState(false);
                     setAuthState(false);
+                    setShowError(true);
                 } else {
                     throw new Error();
                 }
@@ -105,7 +101,6 @@ const Home = (props) => {
                 var fileJson = JSON.parse(res);
                 console.debug("%c◉ fileJson ", "color:#00ff7b", fileJson);
                 setFileList(fileJson);
-                setValidState(true);
             })
             .catch((err) => {
                 console.log(err);
@@ -117,7 +112,6 @@ const Home = (props) => {
 
         localStorage.removeItem("umlsKey");
         setUmlsKey("");
-        setValidState(false);
         setAuthState(false);
         setInputDisabled(false);
     }
@@ -136,20 +130,10 @@ const Home = (props) => {
     }
 
     function renderInvalidView() {
-        if (validState === false && authState === false) {
-            return (
-                <Alert severity="error">
-                    <Typography>
-                        {" "}
-                        Invalid UMLS License Key. Please obtain a valid license key at:{" "}
-                        <a href="https://uts.nlm.nih.gov" target="_blank">https://uts.nlm.nih.gov</a>
-                    </Typography>{" "}
-                    <br />
-                    <br />
-                    <Button variant="contained" onClick={reset}>Try Again</Button>
-                </Alert>
-            );
-        }
+        return (
+            <Alert sx={{marginTop: "20px"}} severity="error">Invalid UMLS License Key</Alert>
+
+        );
     }
 
     function renderTable() {
@@ -171,6 +155,7 @@ const Home = (props) => {
                                     Size
                                 </TableCell>
                                 <TableCell align="left">Description</TableCell>
+                                <TableCell align="left">Last Modified</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -183,17 +168,20 @@ const Home = (props) => {
                                         },
                                     }}
                                 >
-                                    <TableCell width={"50px"} align="left">
+                                    <TableCell>
                                         {fileIcon(row.name)}
                                     </TableCell>
-                                    <TableCell component="th" scope="row">
+                                    <TableCell>
                                         <a href={assets_url_base + row.name + "?umls-key=" + umlsKey}>{row.name}</a>
                                     </TableCell>
-                                    <TableCell width={"50px"} align="left">
+                                    <TableCell>
                                         {row.size}
                                     </TableCell>
-                                    <TableCell align="left">
+                                    <TableCell>
                                         {row.description}
+                                    </TableCell>
+                                    <TableCell>
+                                        {row.last_modified}
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -235,18 +223,17 @@ const Home = (props) => {
                             onChange={updateKey}
                         />{" "}
                         <br /> <br />
-                        {validState === false && authState === false && (
+                        {authState === false && (
                             <Button variant="contained" onClick={authCheck} sx={{ float: "right" }}>Submit</Button>
                         )}
                     </Grid>
                 </Grid>
 
-                {validState === false && authState === true && (
+                {showError === true && (
                     <>{renderInvalidView()}</>
                 )}
 
-                {validState === true &&
-                    authState === true &&
+                {authState === true &&
                     fileList.length !== 0 && (
                         <>
                             <Typography sx={{ marginBottom: "20px" }}>Downloadable Files:{" "}</Typography>
@@ -258,7 +245,7 @@ const Home = (props) => {
     }
 
     function logout() {
-        if (umlsKey !== "" && validState === true && authState === true) {
+        if (authState === true) {
             return (<Button variant="contained" onClick={reset} sx={{ float: "right" }}>Logout</Button>);
         }
     }
