@@ -23,6 +23,7 @@ import { KeyAPI } from "../api/auth";
 import { FileList } from "../api/files";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
+import prettyBytes from 'pretty-bytes';
 
 const Home = (props) => {
     // var [serverMode, setServerMode] = useState("test");
@@ -144,19 +145,16 @@ const Home = (props) => {
             return <GridLoader color="#36d7b7" />;
         } else {
             console.debug("%c◉ fileList ", "color:#00ff7b", fileList);
-            let assets_url_base = `${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}`;
 
             return (
                 <TableContainer component={Paper} sx={{ minWidth: "550px" }}>
-                    <Table size="small" aria-label="simple table">
+                    <Table size="big" aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell width={"50px"}></TableCell>
-                                <TableCell width={"200px"}>Name</TableCell>
-                                <TableCell width={"50px"} align="left">
-                                    Size
-                                </TableCell>
-                                <TableCell align="left">Description</TableCell>
+                                <TableCell align="left" width={"7%"}></TableCell>
+                                <TableCell align="left" width={"20%"}>Name</TableCell>
+                                <TableCell align="left" width={"9%"}>Size</TableCell>
+                                <TableCell align="left" width={"40%"}>Description</TableCell>
                                 <TableCell align="left">Last Modified</TableCell>
                             </TableRow>
                         </TableHead>
@@ -164,27 +162,13 @@ const Home = (props) => {
                             {fileList.map((row, index) => (
                                 <TableRow
                                     key={row.name + "-" + row.index}
-                                    sx={{
-                                        "&:last-child td, &:last-child th": {
-                                            border: 0,
-                                        },
-                                    }}
+                                    sx={{"&:last-child td, &:last-child th": {border: 0}}}
                                 >
-                                    <TableCell>
-                                        {fileIcon(row.name)}
-                                    </TableCell>
-                                    <TableCell>
-                                        <a href={assets_url_base + row.name + "?umls-key=" + umlsKey}>{row.name}</a>
-                                    </TableCell>
-                                    <TableCell>
-                                        {row.size}
-                                    </TableCell>
-                                    <TableCell>
-                                        {row.description}
-                                    </TableCell>
-                                    <TableCell>
-                                        {row.last_modified}
-                                    </TableCell>
+                                    <TableCell>{fileIcon(row.name)}</TableCell>
+                                    <TableCell><a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}` + row.name + "?umls-key=" + umlsKey}>{row.name}</a></TableCell>
+                                    <TableCell>{prettyBytes(6220294481)}</TableCell>
+                                    <TableCell>{row.description}</TableCell>
+                                    <TableCell>{row.last_modified}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

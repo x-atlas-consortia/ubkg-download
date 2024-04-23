@@ -3,42 +3,42 @@
     "description": "A test file...",
     "last_modified": "Thu, 18 Apr 2024 18:37:37 GMT",
     "name": "test-file1.txt",
-    "size": "0.0012598037719726562 MB"
+    "size": "3434344554"
   },
   {
     "description": "A second test file...Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups",
     "last_modified": "Tue, 23 Apr 2024 01:21:02 GMT",
     "name": "test-file2.txt",
-    "size": "0.0012598037719726562 MB"
+    "size": "621333"
   },
   {
     "description": "A third test file...",
     "last_modified": "Tue, 23 Apr 2024 01:21:05 GMT",
     "name": "test-file3.txt",
-    "size": "0.0012598037719726562 MB"
+    "size": "65564545"
   },
   {
     "description": "A fourth test file... for Data Distillery UBKG 4/21/2024",
     "last_modified": "Tue, 23 Apr 2024 01:21:07 GMT",
     "name": "test-file4.txt",
-    "size": "0.0012598037719726562 MB"
+    "size": "44"
   },
   {
     "description": "A fifth test file...",
     "last_modified": "Tue, 23 Apr 2024 01:21:09 GMT",
     "name": "test-file5.txt",
-    "size": "0.0012598037719726562 MB"
+    "size": "7853"
   },
   {
     "description": "A sixth test file...",
     "last_modified": "Tue, 23 Apr 2024 01:21:12 GMT",
     "name": "test-file6.txt",
-    "size": "0.0012598037719726562 MB"
+    "size": "325"
   },
   {
     "description": "A seventh test file...",
     "last_modified": "Tue, 23 Apr 2024 01:21:15 GMT",
     "name": "test-file7.txt",
-    "size": "0.0012598037719726562 MB"
+    "size": "75"
   }
 ]

@@ -21,6 +21,7 @@
     "http-server": "^14.1.1",
     "material-file-icons": "^2.4.0",
     "next": "latest",
+    "pretty-bytes": "^6.1.1",
     "react": "latest",
     "react-dom": "latest",
     "react-spinners": "^0.13.8"
