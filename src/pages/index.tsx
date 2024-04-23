@@ -180,7 +180,7 @@ const Home = (props) => {
 
     function renderLoginView() {
         return (
-            <Paper elevation={0} sx={{ margin: "20px auto", padding: "20px 20px", maxWidth: "1000px",}}>
+            <Paper elevation={0} sx={{ margin: "20px auto", padding: "20px 20px", maxWidth: "1280px",}}>
                 <Grid container spacing={3} sx={{display: "flex", justifyContent: "flex-start", textAlign: "left",}}>
                     <Grid item xs={6}>
                         <Typography>
@@ -247,7 +247,7 @@ const Home = (props) => {
     return (
         <Box>
             {topNav()}
-            <Container maxWidth="lg" className="containerBox">
+            <Container maxWidth="xl" className="containerBox">
                 <Box sx={{ padding: "20px;", margin: "30px auto" }}>
                     <>{renderLoginView()}</>
                 </Box>
