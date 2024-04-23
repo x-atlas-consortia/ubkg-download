@@ -166,7 +166,7 @@ const Home = (props) => {
                                 >
                                     <TableCell>{fileIcon(row.name)}</TableCell>
                                     <TableCell><a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}` + row.name + "?umls-key=" + umlsKey}>{row.name}</a></TableCell>
-                                    <TableCell>{prettyBytes(6220294481)}</TableCell>
+                                    <TableCell>{prettyBytes(row.size)}</TableCell>
                                     <TableCell>{row.description}</TableCell>
                                     <TableCell>{row.last_modified}</TableCell>
                                 </TableRow>
