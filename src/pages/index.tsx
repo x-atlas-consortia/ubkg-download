@@ -185,7 +185,7 @@ const Home = (props) => {
                     <Grid item xs={6}>
                         <Typography>
                             {" "}
-                            Please provide your UMLS Key to access the downloadble files{" "}
+                            Please provide your UMLS Key to access the downloadable files{" "}
                         </Typography>
                         <Typography>
                             {" "}
