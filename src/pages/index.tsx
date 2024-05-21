@@ -178,6 +178,29 @@ const Home = (props) => {
         }
     }
 
+    function renderLicenceInfo() {
+        return (
+            <Alert className="alert alert-info" severity="info" role="alert">
+                <h2>License requirements</h2>
+                <Typography>
+                    The <a href="https://ubkg.docs.xconsortia.org/" target="_blank">Unified Biomedical Knowledge Graph (UBKG)</a> includes content from biomedical vocabularies that are maintained by the <a href="https://uts.nlm.nih.gov/uts/umls/home" target="_blank"> </a>National Library of Medicine. The use of content from the UMLS is governed by the <a href="https://github.com/x-atlas-consortia/ubkg-download/issues/url" target="_blank">UMLS License Agreement</a>.
+                </Typography>
+                <Typography> Use of the UMLS content in the UBKG requires two licenses:</Typography>
+                    <ol>
+                        <li>The University of Pittsburgh distributes content originating from the UMLS by means of a distributor license.</li>
+                        <li>Consumers of the UBKG have access to UMLS content through the license that is part of their <a href="https://uts.nlm.nih.gov/uts/" target="_blank">UMLS Technology Services</a> (UTS) accounts.</li>
+                    </ol>
+                <Typography>
+                    This site combines the API key from the University of Pittsburgh with the API key from a user to authenticate a user's request to download the UBKG. The user must provide the API for their UTS account to the UBKG Download site.
+                </Typography>
+                <h3>To obtain a UTS API key</h3>
+                <ol>
+                    <li>Create a <a href="https://uts.nlm.nih.gov/uts/" target="_blank"> UTS</a> user profile.</li>
+                    <li>Generate an API key.</li>
+                </ol>
+            </Alert>
+        )
+    }
     function renderLoginView() {
         return (
             <Paper elevation={0} sx={{ margin: "20px auto", padding: "20px 20px", maxWidth: "1280px",}}>
@@ -249,6 +272,7 @@ const Home = (props) => {
             {topNav()}
             <Container maxWidth="xl" className="containerBox">
                 <Box sx={{ padding: "20px;", margin: "30px auto" }}>
+                    {renderLicenceInfo()}
                     <>{renderLoginView()}</>
                 </Box>
             </Container>
