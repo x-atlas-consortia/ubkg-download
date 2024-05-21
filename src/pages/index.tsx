@@ -36,15 +36,16 @@ const Home = (props) => {
 
     useEffect(() => {
         const ls = localStorage.getItem("umlsKey");
-
         if (ls) {
             setUmlsKey(ls);
+            setHasAuth(true);
         }
     }, []);
 
     useEffect(() => {
         if (umlsKey) {
             localStorage.setItem("umlsKey", umlsKey);
+
         }
     }, [umlsKey]);
 
@@ -140,14 +141,6 @@ const Home = (props) => {
         );
     }
 
-    // function renderError() {
-    //     // if (errorMsg) {
-    //         return (
-                
-    //         );
-    //     // }
-    // }
-
     function renderTable() {
         // auth check asap to pre-loadya in there
         if (fileList.length === 0) {
@@ -216,11 +209,9 @@ const Home = (props) => {
                 <Grid container spacing={3} sx={{display: "flex", justifyContent: "flex-start", textAlign: "left",}}>
                     <Grid item xs={6}>
                         <Typography>
-                            {" "}
                             Please provide your UMLS Key to access the downloadable files{" "}
                         </Typography>
                         <Typography>
-                            {" "}
                             To acquire a valid licence key, please visit:{" "}
                             <a href="https://uts.nlm.nih.gov" target="_blank">https://uts.nlm.nih.gov</a>
                         </Typography>
@@ -247,7 +238,6 @@ const Home = (props) => {
                     </Grid>
                 </Grid>
 
-                {/* <>{renderError(error)}</> */}
                 {error && error.length > 0 && (
                     <Alert sx={{marginTop: "20px"}} severity="error">{error}</Alert>
                 )}
@@ -264,7 +254,7 @@ const Home = (props) => {
 
     function logout() {
         if (hasAuth) {
-            return (<Button variant="contained" onClick={reset} sx={{ float: "right" }}>Logout</Button>);
+            return (<Box  sx={{ float: "right" }}><Typography sx={{display:"inline-block"}}>{umlsKey}</Typography> <Button variant="contained" onClick={reset}>Logout</Button></Box>);
         }
     }
 
@@ -273,7 +263,7 @@ const Home = (props) => {
             <AppBar id="header" sx={{ backgroundColor: "#444a65" }}>
                 <Toolbar variant="dense">
                     <Box><h1>UBKG Download</h1></Box>
-                    {<Box style={{ flex: 1 }}>{logout()}</Box>}
+                    {<Box style={{ flex: 1 }}> {logout()}</Box>}
                 </Toolbar>
             </AppBar>
         );
