@@ -35,24 +35,33 @@ const Home = (props) => {
     var [fileList, setFileList] = useState([]);
 
     useEffect(() => {
+        console.debug('%c◉ useEffect LS Get, sets umlskey ', 'color:#00ff7b', );
         const ls = localStorage.getItem("umlsKey");
         if (ls) {
             setUmlsKey(ls);
-            setHasAuth(true);
+            FileList(ls)
+                .then((res) => {
+                    var fileJson = JSON.parse(res);
+                    setFileList(fileJson);
+                    setHasAuth(true);
+                })
+                .catch((err) => {   
+                    console.debug('%c◉ err ', 'color:#ff005d', err);
+                });
         }
     }, []);
 
-    useEffect(() => {
-        if (umlsKey) {
-            localStorage.setItem("umlsKey", umlsKey);
-
-        }
-    }, [umlsKey]);
+    // useEffect(() => {
+    //     console.debug('%c◉ useEffect LS Set if  ', 'color:#00ff7b', );
+    //     if (umlsKey) {
+    //         localStorage.setItem("umlsKey", umlsKey);
+    //     }
+    // }, [umlsKey]);
 
     function authCheck() {
+        if(!localStorage.getItem("umlskey")){localStorage.setItem("umlsKey", umlsKey)}
         console.debug("%c◉ umlsKey ", "color:#00ff7b", umlsKey);
         if(umlsKey && umlsKey.length > 0 && umlsKey !== ''){
-            
             KeyAPI(umlsKey)
             .then((res) => {
                 console.debug(res);
@@ -102,7 +111,8 @@ const Home = (props) => {
 
     }
 
-    function fileGet() {
+    function fileGet(providedKey) {
+        var key = providedKey || umlsKey;
         FileList(umlsKey)
             .then((res) => {
                 console.debug("%c◉ fileGet Success ", "color:#c3fd7b", res);
@@ -200,55 +210,44 @@ const Home = (props) => {
                     <li>Create a <a href="https://uts.nlm.nih.gov/uts/" target="_blank"> UTS</a> user profile.</li>
                     <li>Generate an API key.</li>
                 </ol>
-            </Alert>
-        )
-    }
-    function renderLoginView() {
-        return (
-            <Paper elevation={0} sx={{ margin: "20px auto", padding: "20px 20px", maxWidth: "1280px",}}>
-                <Grid container spacing={3} sx={{display: "flex", justifyContent: "flex-start", textAlign: "left",}}>
-                    <Grid item xs={6}>
-                        <Typography>
-                            Please provide your UMLS Key to access the downloadable files{" "}
-                        </Typography>
-                        <Typography>
-                            To acquire a valid licence key, please visit:{" "}
-                            <a href="https://uts.nlm.nih.gov" target="_blank">https://uts.nlm.nih.gov</a>
-                        </Typography>
-                    </Grid>
-
-                    <Grid item xs={6}>
+                
+                { ! hasAuth && (
+                    <>
                         <TextField
                             label="UMLS Key"
                             size="small"
                             margin="dense"
                             multiline
                             fullWidth
-                            variant="filled"
+                            // variant="filled"
                             id="umlsKey"
                             value={umlsKey}
                             placeholder={umlsKey}
                             disabled={inputDisabled}
                             onChange={updateKey}
+                            sx={{
+                                backgroundColor:"white"
+                            }}
                         />{" "}
                         <br /> <br />
-                        { ! hasAuth && (
-                            <Button variant="contained" onClick={authCheck} sx={{ float: "right" }}>Submit</Button>
-                        )}
-                    </Grid>
-                </Grid>
-
-                {error && error.length > 0 && (
-                    <Alert sx={{marginTop: "20px"}} severity="error">{error}</Alert>
-                )}
-
-                {hasAuth && fileList.length > 0 && (
-                    <>
-                        <Typography sx={{ marginBottom: "20px" }}>Downloadable Files ({fileList.length}):</Typography>
-                        {renderTable()}
+                        <Button variant="contained" onClick={() => authCheck()} sx={{ float: "right"}}>Submit</Button>
                     </>
                 )}
-            </Paper>
+            </Alert>
+        )
+    }
+    function renderFileView() {
+        console.debug('%c◉ hasAuth ', 'color:#00ff7b', hasAuth);
+        console.debug('%c◉ fileList ', 'color:#00ff7b', fileList);
+        return (
+            <>
+                {hasAuth && fileList.length > 0 && (
+                    <Paper elevation={0} sx={{ margin: "20px auto", padding: "20px 20px", maxWidth: "1280px",}}>
+                        <Typography sx={{ marginBottom: "20px" }}>Downloadable Files ({fileList.length}):</Typography>
+                        {renderTable()}
+                    </Paper>
+                )}
+            </>
         );
     }
 
@@ -274,8 +273,12 @@ const Home = (props) => {
             {topNav()}
             <Container maxWidth="xl" className="containerBox">
                 <Box sx={{ padding: "20px;", margin: "30px auto" }}>
+                    
                     {renderLicenceInfo()}
-                    <>{renderLoginView()}</>
+                    {error && error.length > 0 && (
+                        <Alert sx={{marginTop: "20px"}} severity="error">{error}</Alert>
+                    )}
+                    <>{renderFileView()}</>
                 </Box>
             </Container>
         </Box>
