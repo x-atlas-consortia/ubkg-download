@@ -28,6 +28,7 @@ import prettyBytes from 'pretty-bytes';
 const Home = (props) => {
     // var [serverMode, setServerMode] = useState("test");
     var [umlsKey, setUmlsKey] = useState('');
+    var [keyError, setKeyError] = useState(false);
     var [hasAuth, setHasAuth] = useState(false);
     var [error, setError] = useState('');
     var [inputDisabled, setInputDisabled] = useState(false);
@@ -49,8 +50,9 @@ const Home = (props) => {
 
     function authCheck() {
         console.debug("%c◉ umlsKey ", "color:#00ff7b", umlsKey);
-
-        KeyAPI(umlsKey)
+        if(umlsKey && umlsKey.length > 0 && umlsKey !== ''){
+            
+            KeyAPI(umlsKey)
             .then((res) => {
                 console.debug(res);
                 //@TODO:  Here's where we check if they umls key is true
@@ -90,6 +92,13 @@ const Home = (props) => {
                 console.log(err);
                 setError('The server encountered an internal error and was unable to complete your request')
             });
+            
+        } else {
+            setKeyError(true);
+            setError('Please provide a valid UMLS License Key');
+            console.debug('%c◉ NO KEY ', 'color:#ff005d', );
+        }
+
     }
 
     function fileGet() {
@@ -131,13 +140,13 @@ const Home = (props) => {
         );
     }
 
-    function renderError(errorMsg) {
-        if (errorMsg) {
-            return (
-                <Alert sx={{marginTop: "20px"}} severity="error">{errorMsg}</Alert>
-            );
-        }
-    }
+    // function renderError() {
+    //     // if (errorMsg) {
+    //         return (
+                
+    //         );
+    //     // }
+    // }
 
     function renderTable() {
         // auth check asap to pre-loadya in there
@@ -238,14 +247,17 @@ const Home = (props) => {
                     </Grid>
                 </Grid>
 
-                <>{renderError(error)}</>
+                {/* <>{renderError(error)}</> */}
+                {error && error.length > 0 && (
+                    <Alert sx={{marginTop: "20px"}} severity="error">{error}</Alert>
+                )}
 
                 {hasAuth && fileList.length > 0 && (
-                        <>
-                            <Typography sx={{ marginBottom: "20px" }}>Downloadable Files ({fileList.length}):</Typography>
-                            {renderTable()}
-                        </>
-                    )}
+                    <>
+                        <Typography sx={{ marginBottom: "20px" }}>Downloadable Files ({fileList.length}):</Typography>
+                        {renderTable()}
+                    </>
+                )}
             </Paper>
         );
     }
