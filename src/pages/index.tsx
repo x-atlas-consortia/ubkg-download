@@ -139,7 +139,8 @@ const Home = (props) => {
     }
 
     function updateKey(event) {
-        setUmlsKey(event.target.value);
+        var value = event.target.value;
+        setUmlsKey(value.trim());
     }
 
     function fileIcon(filename) {
