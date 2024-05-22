@@ -214,6 +214,7 @@ const Home = (props) => {
                 
                 { ! hasAuth && (
                     <>
+                        <Typography>Please provide your UMLS Key to access the downloadable files </Typography>
                         <TextField
                             label="UMLS Key"
                             size="small"
