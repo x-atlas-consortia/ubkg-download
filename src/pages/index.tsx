@@ -28,29 +28,41 @@ import prettyBytes from 'pretty-bytes';
 const Home = (props) => {
     // var [serverMode, setServerMode] = useState("test");
     var [umlsKey, setUmlsKey] = useState('');
+    var [keyError, setKeyError] = useState(false);
     var [hasAuth, setHasAuth] = useState(false);
     var [error, setError] = useState('');
     var [inputDisabled, setInputDisabled] = useState(false);
     var [fileList, setFileList] = useState([]);
 
     useEffect(() => {
+        console.debug('%c◉ useEffect LS Get, sets umlskey ', 'color:#00ff7b', );
         const ls = localStorage.getItem("umlsKey");
-
         if (ls) {
             setUmlsKey(ls);
+            FileList(ls)
+                .then((res) => {
+                    var fileJson = JSON.parse(res);
+                    setFileList(fileJson);
+                    setHasAuth(true);
+                })
+                .catch((err) => {   
+                    console.debug('%c◉ err ', 'color:#ff005d', err);
+                });
         }
     }, []);
 
-    useEffect(() => {
-        if (umlsKey) {
-            localStorage.setItem("umlsKey", umlsKey);
-        }
-    }, [umlsKey]);
+    // useEffect(() => {
+    //     console.debug('%c◉ useEffect LS Set if  ', 'color:#00ff7b', );
+    //     if (umlsKey) {
+    //         localStorage.setItem("umlsKey", umlsKey);
+    //     }
+    // }, [umlsKey]);
 
     function authCheck() {
+        if(!localStorage.getItem("umlskey")){localStorage.setItem("umlsKey", umlsKey)}
         console.debug("%c◉ umlsKey ", "color:#00ff7b", umlsKey);
-
-        KeyAPI(umlsKey)
+        if(umlsKey && umlsKey.length > 0 && umlsKey !== ''){
+            KeyAPI(umlsKey)
             .then((res) => {
                 console.debug(res);
                 //@TODO:  Here's where we check if they umls key is true
@@ -90,9 +102,17 @@ const Home = (props) => {
                 console.log(err);
                 setError('The server encountered an internal error and was unable to complete your request')
             });
+            
+        } else {
+            setKeyError(true);
+            setError('Please provide a valid UMLS License Key');
+            console.debug('%c◉ NO KEY ', 'color:#ff005d', );
+        }
+
     }
 
-    function fileGet() {
+    function fileGet(providedKey) {
+        var key = providedKey || umlsKey;
         FileList(umlsKey)
             .then((res) => {
                 console.debug("%c◉ fileGet Success ", "color:#c3fd7b", res);
@@ -119,7 +139,8 @@ const Home = (props) => {
     }
 
     function updateKey(event) {
-        setUmlsKey(event.target.value);
+        var value = event.target.value;
+        setUmlsKey(value.trim());
     }
 
     function fileIcon(filename) {
@@ -129,14 +150,6 @@ const Home = (props) => {
                 dangerouslySetInnerHTML={{ __html: getIcon(filename).svg }}
             />
         );
-    }
-
-    function renderError(errorMsg) {
-        if (errorMsg) {
-            return (
-                <Alert sx={{marginTop: "20px"}} severity="error">{errorMsg}</Alert>
-            );
-        }
     }
 
     function renderTable() {
@@ -178,58 +191,71 @@ const Home = (props) => {
         }
     }
 
-    function renderLoginView() {
+    function renderLicenceInfo() {
         return (
-            <Paper elevation={0} sx={{ margin: "20px auto", padding: "20px 20px", maxWidth: "1280px",}}>
-                <Grid container spacing={3} sx={{display: "flex", justifyContent: "flex-start", textAlign: "left",}}>
-                    <Grid item xs={6}>
-                        <Typography>
-                            {" "}
-                            Please provide your UMLS Key to access the downloadable files{" "}
-                        </Typography>
-                        <Typography>
-                            {" "}
-                            To acquire a valid licence key, please visit:{" "}
-                            <a href="https://uts.nlm.nih.gov" target="_blank">https://uts.nlm.nih.gov</a>
-                        </Typography>
-                    </Grid>
-
-                    <Grid item xs={6}>
+            <Alert className="alert alert-info" severity="info" role="alert" >
+                <h2 style={{marginTop:"-5px"}}>License requirements</h2>
+                <Typography>
+                    The <a href="https://ubkg.docs.xconsortia.org/" target="_blank">Unified Biomedical Knowledge Graph (UBKG)</a> includes content from biomedical vocabularies that are maintained by the <a href="https://uts.nlm.nih.gov/uts/umls/home" target="_blank"> </a>National Library of Medicine. The use of content from the UMLS is governed by the <a href="https://github.com/x-atlas-consortia/ubkg-download/issues/url" target="_blank">UMLS License Agreement</a>.
+                </Typography>
+                <Typography> Use of the UMLS content in the UBKG requires two licenses:</Typography>
+                    <ol>
+                        <li>The University of Pittsburgh distributes content originating from the UMLS by means of a distributor license.</li>
+                        <li>Consumers of the UBKG have access to UMLS content through the license that is part of their <a href="https://uts.nlm.nih.gov/uts/" target="_blank">UMLS Technology Services</a> (UTS) accounts.</li>
+                    </ol>
+                <Typography>
+                    This site combines the API key from the University of Pittsburgh with the API key from a user to authenticate a user's request to download the UBKG. The user must provide the API for their UTS account to the UBKG Download site.
+                </Typography>
+                <h3>To obtain a UTS API key</h3>
+                <ol>
+                    <li>Create a <a href="https://uts.nlm.nih.gov/uts/" target="_blank"> UTS</a> user profile.</li>
+                    <li>Generate an API key.</li>
+                </ol>
+                
+                { ! hasAuth && (
+                    <>
+                        <Typography>Please provide your UMLS Key to access the downloadable files </Typography>
                         <TextField
                             label="UMLS Key"
                             size="small"
                             margin="dense"
                             multiline
                             fullWidth
-                            variant="filled"
+                            // variant="filled"
                             id="umlsKey"
                             value={umlsKey}
                             placeholder={umlsKey}
                             disabled={inputDisabled}
                             onChange={updateKey}
+                            sx={{
+                                backgroundColor:"white"
+                            }}
                         />{" "}
                         <br /> <br />
-                        { ! hasAuth && (
-                            <Button variant="contained" onClick={authCheck} sx={{ float: "right" }}>Submit</Button>
-                        )}
-                    </Grid>
-                </Grid>
-
-                <>{renderError(error)}</>
-
+                        <Button variant="contained" onClick={() => authCheck()} sx={{ float: "right"}}>Submit</Button>
+                    </>
+                )}
+            </Alert>
+        )
+    }
+    function renderFileView() {
+        console.debug('%c◉ hasAuth ', 'color:#00ff7b', hasAuth);
+        console.debug('%c◉ fileList ', 'color:#00ff7b', fileList);
+        return (
+            <>
                 {hasAuth && fileList.length > 0 && (
-                        <>
-                            <Typography sx={{ marginBottom: "20px" }}>Downloadable Files ({fileList.length}):</Typography>
-                            {renderTable()}
-                        </>
-                    )}
-            </Paper>
+                    <Paper elevation={0} sx={{ margin: "20px auto", padding: "20px 20px", }}>
+                        <Typography sx={{ marginBottom: "20px" }}>Downloadable Files ({fileList.length}):</Typography>
+                        {renderTable()}
+                    </Paper>
+                )}
+            </>
         );
     }
 
     function logout() {
         if (hasAuth) {
-            return (<Button variant="contained" onClick={reset} sx={{ float: "right" }}>Logout</Button>);
+            return (<Box  sx={{ float: "right" }}><Typography sx={{display:"inline-block"}}>{umlsKey}</Typography> <Button variant="contained" onClick={reset}>Logout</Button></Box>);
         }
     }
 
@@ -238,7 +264,7 @@ const Home = (props) => {
             <AppBar id="header" sx={{ backgroundColor: "#444a65" }}>
                 <Toolbar variant="dense">
                     <Box><h1>UBKG Download</h1></Box>
-                    {<Box style={{ flex: 1 }}>{logout()}</Box>}
+                    {<Box style={{ flex: 1 }}> {logout()}</Box>}
                 </Toolbar>
             </AppBar>
         );
@@ -249,7 +275,12 @@ const Home = (props) => {
             {topNav()}
             <Container maxWidth="xl" className="containerBox">
                 <Box sx={{ padding: "20px;", margin: "30px auto" }}>
-                    <>{renderLoginView()}</>
+                    
+                    {renderLicenceInfo()}
+                    {error && error.length > 0 && (
+                        <Alert sx={{marginTop: "20px"}} severity="error">{error}</Alert>
+                    )}
+                    <>{renderFileView()}</>
                 </Box>
             </Container>
         </Box>
