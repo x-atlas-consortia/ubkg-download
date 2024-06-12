@@ -25,7 +25,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import prettyBytes from 'pretty-bytes';
 
-const Home = (props) => {
+const Home = (props: any) => {
     // var [serverMode, setServerMode] = useState("test");
     var [umlsKey, setUmlsKey] = useState('');
     var [keyError, setKeyError] = useState(false);
@@ -83,7 +83,7 @@ const Home = (props) => {
                     setError('');
 
                     // Now that we're Valid, lets get the Files
-                    fileGet();
+                    fileGet(umlsKey);
                 } else if (res.status === 403 || res.status === 401) {
                     // 401 / 403
                     console.debug(
@@ -111,7 +111,7 @@ const Home = (props) => {
 
     }
 
-    function fileGet(providedKey) {
+    function fileGet(providedKey:string) {
         var key = providedKey || umlsKey;
         FileList(umlsKey)
             .then((res) => {
@@ -138,17 +138,14 @@ const Home = (props) => {
         setError('');
     }
 
-    function updateKey(event) {
+    function updateKey(event:any) {
         var value = event.target.value;
         setUmlsKey(value.trim());
     }
 
-    function fileIcon(filename) {
+    function fileIcon(filename:string) {
         return (
-            <div
-                className="test"
-                dangerouslySetInnerHTML={{ __html: getIcon(filename).svg }}
-            />
+            <div className="test" dangerouslySetInnerHTML={{ __html: getIcon(filename).svg }}/>
         );
     }
 
@@ -161,7 +158,7 @@ const Home = (props) => {
 
             return (
                 <TableContainer component={Paper} sx={{ minWidth: "550px" }}>
-                    <Table size="big" aria-label="simple table">
+                    <Table  aria-label="simple table">
                         <TableHead>
                             <TableRow>
                                 <TableCell align="left" width={"7%"}></TableCell>
@@ -172,13 +169,13 @@ const Home = (props) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {fileList.map((row, index) => (
+                            {fileList.map((row: { name: string, size: number, description: string, last_modified: string }, index: number) => (
                                 <TableRow
-                                    key={row.name + "-" + row.index}
+                                    key={row.name + "-" + index}
                                     sx={{"&:last-child td, &:last-child th": {border: 0}}}
                                 >
                                     <TableCell>{fileIcon(row.name)}</TableCell>
-                                    <TableCell><a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}` + row.name + "?umls-key=" + umlsKey}>{row.name}</a></TableCell>
+                                    <TableCell><a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}${row.name}?umls-key=${umlsKey}`}>{row.name}</a></TableCell>
                                     <TableCell>{prettyBytes(row.size)}</TableCell>
                                     <TableCell>{row.description}</TableCell>
                                     <TableCell>{row.last_modified}</TableCell>
