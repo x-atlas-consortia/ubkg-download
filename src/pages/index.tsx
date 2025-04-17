@@ -193,7 +193,7 @@ const Home = (props: any) => {
             <Alert className="alert alert-info" severity="info" role="alert" >
                 <h2 style={{marginTop:"-5px"}}>License requirements</h2>
                 <Typography>
-                    The <a href="https://ubkg.docs.xconsortia.org/" target="_blank">Unified Biomedical Knowledge Graph (UBKG)</a> includes content from biomedical vocabularies that are maintained by the <a href="https://uts.nlm.nih.gov/uts/umls/home" target="_blank"> </a>National Library of Medicine. The use of content from the UMLS is governed by the <a href="https://github.com/x-atlas-consortia/ubkg-download/issues/url" target="_blank">UMLS License Agreement</a>.
+                    The <a href="https://ubkg.docs.xconsortia.org/" target="_blank">Unified Biomedical Knowledge Graph (UBKG)</a> includes content from biomedical vocabularies that are maintained by the <a href="https://uts.nlm.nih.gov/uts/umls/home" target="_blank"> </a>National Library of Medicine. The use of content from the UMLS is governed by the <a href="https://uts.nlm.nih.gov/uts/assets/LicenseAgreement.pdf" target="_blank">UMLS License Agreement</a>.
                 </Typography>
                 <Typography> Use of the UMLS content in the UBKG requires two licenses:</Typography>
                     <ol>
