@@ -1,15 +1,11 @@
 "use client";
-
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
-import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
-import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -17,22 +13,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Alert from "@mui/material/Alert";
-import GridLoader from "react-spinners/GridLoader";
 import { KeyAPI } from "../api/auth";
 import { FileListProviderUpgrade } from "../api/files";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import prettyBytes from 'pretty-bytes';
 import LaunchIcon from '@mui/icons-material/Launch';
-import IconButton from '@mui/material/IconButton';
-import { getIcon } from "material-file-icons";
-
-import { FaOctopusDeploy } from "react-icons/fa";
 import { GrDocker } from "react-icons/gr";
 import { FaTruck } from "react-icons/fa";
 import { BsBoxSeamFill } from "react-icons/bs";
 import { FaFileCsv } from "react-icons/fa6";
-import { DiDocker } from "react-icons/di";
 
 const Home = (props: any) => {
   // var [serverMode, setServerMode] = useState("test");
@@ -381,5 +370,5 @@ const Home = (props: any) => {
     );
   };
 
-  export default Home;
+export default Home;
           

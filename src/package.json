@@ -21,13 +21,10 @@
     "axios": "^1.6.8",
     "cors": "^2.8.5",
     "http-server": "^14.1.1",
-    "material-file-icons": "^2.4.0",
     "next": "latest",
-    "pretty-bytes": "^6.1.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-icons": "^5.5.0",
-    "react-spinners": "^0.13.8"
+    "react-icons": "^5.5.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
