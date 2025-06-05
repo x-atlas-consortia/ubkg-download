@@ -215,11 +215,11 @@ const Home = (props: any) => {
             <TableBody>
             {files.map((row:File, index: number) => (
               <TableRow key={row.name + "-" + index} sx={{"&:last-child td, &:last-child th": {border: 0}}} >
-                <TableCell sx={{ fontSize: "2rem!important"}}>{fileIcon(row.type)}</TableCell>
-                <TableCell sx={{ fontSize: "0.8rem!important"}}>{row.date}</TableCell>
-                <TableCell sx={{ fontSize: "0.8rem!important"}}><a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}${row.name}?umls-key=${umlsKey}`}>{row.name}</a></TableCell>
-                <TableCell sx={{ fontSize: "0.8rem!important"}}>{row.typeDetail}</TableCell>
-                <TableCell sx={{ fontSize: "0.8rem!important"}}>{row.description}</TableCell>
+                <TableCell sx={{fontSize: "2rem!important"}}>{fileIcon(row.type)}</TableCell>
+                <TableCell sx={{fontSize: "0.8rem!important"}}>{row.date}</TableCell>
+                <TableCell sx={{fontSize: "0.8rem!important"}}><a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}${row.name}?umls-key=${umlsKey}`}>{row.name}</a></TableCell>
+                <TableCell sx={{fontSize: "0.8rem!important"}}>{row.typeDetail}</TableCell>
+                <TableCell sx={{fontSize: "0.8rem!important"}}>{row.description}</TableCell>
               </TableRow>
             ))}
             </TableBody>
