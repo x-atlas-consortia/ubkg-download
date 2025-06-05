@@ -177,6 +177,7 @@ const Home = (props: any) => {
           background: "hsl(0 0% 23.14%)", 
           color: "white", 
           padding: "10px"}}>
+          
           <Box sx={{display: "flex", flexShrink:2, paddingRight:"20px"}}>
             <h3 style={{margin:"0px"}}>{name}</h3>
             <a href={documentation_url} style={{
@@ -196,34 +197,34 @@ const Home = (props: any) => {
           width:'100%',
           backgroundColor: "#f5f5f5",
           border: "2px solid #5c5c5c",}}>
-          <Table  aria-label="simple table" size="small" >
-          <TableHead sx={{
-            backgroundColor: "#ebebeb",
-            borderBottom:"1px solid #5c5c5c",
-            "& th": {
-              fontWeight: "bold",
-              color: "#444a65"}}}>
-            <TableRow>
-              <TableCell align="left"></TableCell>
-              <TableCell align="left" width={"7%"}>Date</TableCell>
-              <TableCell align="left" >File</TableCell>
-              <TableCell align="left" >Type</TableCell>
-              <TableCell align="left" width={"30%"}>Description</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-          {files.map((row:File, index: number) => (
-            <TableRow key={row.name + "-" + index} sx={{"&:last-child td, &:last-child th": {border: 0}}} >
-              <TableCell sx={{fontSize: "2rem!important"}}>{fileIcon(row.type)}</TableCell>
-              <TableCell sx={{fontSize: "0.8rem!important"}}>{row.date}</TableCell>
-              <TableCell sx={{fontSize: "0.8rem!important"}}><a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}${row.name}?umls-key=${umlsKey}`}>{row.name}</a></TableCell>
-              <TableCell sx={{fontSize: "0.8rem!important"}}>{row.typeDetail}</TableCell>
-              <TableCell sx={{fontSize: "0.8rem!important"}}>{row.description}</TableCell>
-            </TableRow>
-          ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+          <Table aria-label="simple table" size="small" sx={{tableLayout: "fixed"}}>
+            <TableHead sx={{
+              backgroundColor: "#ebebeb",
+              borderBottom:"1px solid #5c5c5c",
+              "& th": {
+                fontWeight: "bold",
+                color: "#444a65"}}}>
+              <TableRow>
+                <TableCell align="left" sx={{width:"84px!important"}} > </TableCell>
+                <TableCell align="left" sx={{width:"105px!important"}}> Date </TableCell>
+                <TableCell align="left" sx={{width:"249px!important"}}> File </TableCell>
+                <TableCell align="left" sx={{width:"533px!important"}}> Type </TableCell>
+                <TableCell align="left" sx={{width:"402px!important"}}> Description </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+            {files.map((row:File, index: number) => (
+              <TableRow key={row.name + "-" + index} sx={{"&:last-child td, &:last-child th": {border: 0}}} >
+                <TableCell sx={{ fontSize: "2rem!important"}}>{fileIcon(row.type)}</TableCell>
+                <TableCell sx={{ fontSize: "0.8rem!important"}}>{row.date}</TableCell>
+                <TableCell sx={{ fontSize: "0.8rem!important"}}><a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}${row.name}?umls-key=${umlsKey}`}>{row.name}</a></TableCell>
+                <TableCell sx={{ fontSize: "0.8rem!important"}}>{row.typeDetail}</TableCell>
+                <TableCell sx={{ fontSize: "0.8rem!important"}}>{row.description}</TableCell>
+              </TableRow>
+            ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       <Box sx={{
         display: "flex",
         width:"100%",
