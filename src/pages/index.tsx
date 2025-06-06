@@ -142,19 +142,11 @@ const Home = (props: any) => {
       }, {} as Record<string, { Name: string; files: File[] }>)
     ) as { Name: string; files: File[] }[];
 
-    // setFileList(groupedByContext)
-    // console.debug('%c◉ groupedByContext ', 'color:#00ff7b', groupedByContext);
-
-
-    let fakeGroupedFiles = fakeFiles;
-    console.debug('%c◉ fakeGroupedFiles ', 'color:#00ff7b', fakeGroupedFiles);
-    
-    const sortedFilesets = sortAllFilesets(fakeGroupedFiles);
+    const sortedFilesets = sortAllFilesets(groupedByContext);
     console.debug('%c◉ sortedFilesets ', 'color:#00ff7b', sortedFilesets);
 
     setFileList(sortedFilesets)
   }
-
 
 
   function groupFilesByType(files:Array<any>) {
@@ -169,20 +161,17 @@ const Home = (props: any) => {
 function sortFilesByDateDesc(files:Array<any>) {
   return files.slice().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
-// For a single fileset: group by type, sort each group by date desc, then flatten by type order
+
 function sortFilesInFileset(fileset:Array<any>) {
   const grouped = groupFilesByType(fileset.files);
-  // Sort types alphabetically for consistent order
   const sortedTypes = Object.keys(grouped).sort();
-  // Flatten: for each type, sorted by date desc
   const sortedFiles = sortedTypes.flatMap(type => sortFilesByDateDesc(grouped[type]));
   return { ...fileset, files: sortedFiles };
 }
-// For the array of filesets
+
 function sortAllFilesets(filesets) {
   return filesets.map(sortFilesInFileset);
 }
-
 
 function reset() {
   localStorage.removeItem("umlsKey");
@@ -233,13 +222,14 @@ function tableBuilder(tableData: TableData) {
         </Box>
       </Box>
       
-      <TableContainer sx={{ 
+      <TableContainer 
+        sx={{ 
         minWidth: "550px",
         display: "block",
         width:'100%',
         backgroundColor: "#f5f5f5",
         border: "2px solid #5c5c5c",}}>
-        <Table aria-label="simple table" size="small" sx={{tableLayout: "fixed"}}>
+        <Table aria-label="simple table" size="small" sx={{tableLayout: "fixed"}} className="fileTable">
           <TableHead sx={{
             backgroundColor: "#ebebeb",
             borderBottom:"1px solid #5c5c5c",
@@ -261,9 +251,10 @@ function tableBuilder(tableData: TableData) {
               <TableCell sx={{fontSize: "0.8rem!important"}}>{row.date}</TableCell>
               <TableCell sx={{fontSize: "0.8rem!important"}}>
                 <a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}${row.name}?umls-key=${umlsKey}`}>{row.name}</a><br />
-                <span style={{color: "#555",verticalAlign: "middle",fontSize:"1rem!important",marginBottom:"5px"}}>
-                  <FaFileArchive style={{margin:"0 5px 0 0px"}} />{row.size?row.size.zipped:"??? GB"} <FaBoxOpen style={{margin:"0 5px 0 2px"}} />{row.size?row.size.unzipped:"3.26 GB"}
-                  </span>
+                <span style={{color: "#555",verticalAlign: "sub",fontSize:"1rem!important", marginBottom:"10px"}}>
+                  {row.size && row.size.zipped && (<><FaFileArchive style={{margin:"0 3px 0 0px"}} />{row.size.zipped}</>)}
+                  {row.size && row.size.unzipped && (<><FaBoxOpen style={{margin:"0 2px 0  10px"}} />{row.size.unzipped}</>)}
+                </span>
               </TableCell>
               <TableCell sx={{fontSize: "0.8rem!important"}}>{row.typeDetail}</TableCell>
               <TableCell sx={{fontSize: "0.8rem!important"}}>{row.description}</TableCell>
@@ -397,161 +388,6 @@ function renderFileView() {
       </AppBar>
     );
   }
-
-  const fakeFiles = [{
-      "Name": "base",
-      "files": [{
-          "name": "ubkg-neo4j-base19mar2025.zip",
-          "description": "19 Mar 2025 Base context",
-          "date": "2025-01-25",
-          "context": "base",
-          "type": "neo4j",
-          "size":{
-            "zipped": "3.26 GB",
-            "unzipped": "21.85 GB"
-          },
-          "typeDetail": "Zip archive with turn-key Docker distribution of UBKG neo4j instance"
-        },{
-          "name": "ubkg-neo4j-base19mar2025.zip",
-          "description": "19 Mar 2025 Base context",
-          "date": "2025-01-02",
-          "context": "base",
-          "type": "neo4j",
-          "size":{
-            "zipped": "3.26 GB",
-            "unzipped": "21.85 GB"
-          },
-          "typeDetail": "Zip archive with turn-key Docker distribution of UBKG neo4j instance"
-        },{
-          "name": "ubkg-neo4j-base19mar2025.zip",
-          "description": "19 Mar 2025 Base context",
-          "date": "2025-01-12",
-          "context": "base",
-          "type": "csv",
-          "size":{
-            "zipped": "3.26 GB",
-            "unzipped": "21.85 GB"
-          },
-          "typeDetail": "Zip archive with turn-key Docker distribution of UBKG neo4j instance"
-        }]
-    },{
-      "Name": "Data Distillery",
-      "files": [{
-          "name": "DataDistillery03Jan2025.zip",
-          "description": "03 Jan 2025 Data Distillery - full distribution",
-          "date": "2025-01-03",
-          "context": "Data Distillery",
-          "type": "neo4j",
-          "size":{
-            "zipped": "3.26 GB",
-            "unzipped": "21.85 GB"
-          },
-          "typeDetail": "Zip archive with turn-key Docker distribution of UBKG neo4j instance"
-        },
-        {
-          "name": "03Jan2025DD_csvs.zip",
-          "description": "03 Jan 2025 Data Distillery",
-          "date": "2025-02-03",
-          "context": "Data Distillery",
-          "type": "csv",
-          "size":{
-            "zipped": "3.26 GB",
-            "unzipped": "21.85 GB"
-          },
-          "typeDetail": "Zip archive of ontology CSVs that can be used to generate a UBKG neo4j instance"
-        },
-        {
-          "name": "DD_no_BIOMARKER03Jan2025.zip",
-          "description": "03 Jan 2025 Data Distillery except for Biomarker",
-          "date": "2025-03-03",
-          "context": "Data Distillery",
-          "type": "csv",
-          "size":{
-            "zipped": "3.26 GB",
-            "unzipped": "21.85 GB"
-          },
-          "typeDetail": "Zip archive of ontology CSVs that can be used to generate a UBKG neo4j instance"
-        },
-        {
-          "name": "DD_no_BIOMARKER03Jan2025.zip",
-          "description": "03 Jan 2025 Data Distillery except for Biomarker",
-          "date": "2025-04-03",
-          "context": "Data Distillery",
-          "type": "csv",
-          "size":{
-            "zipped": "3.26 GB",
-            "unzipped": "21.85 GB"
-          },
-          "typeDetail": "Zip archive of ontology CSVs that can be used to generate a UBKG neo4j instance"
-        },
-        {
-          "name": "DD_no_BIOMARKER03Jan2025.zip",
-          "description": "03 Jan 2025 Data Distillery except for Biomarker",
-          "date": "2025-12-03",
-          "context": "Data Distillery",
-          "type": "neo4j",
-          "size":{
-            "zipped": "3.26 GB",
-            "unzipped": "21.85 GB"
-          },
-          "typeDetail": "Zip archive of ontology CSVs that can be used to generate a UBKG neo4j instance"
-        },
-        {
-          "name": "DD_no_BIOMARKER03Jan2025.zip",
-          "description": "03 Jan 2025 Data Distillery except for Biomarker",
-          "date": "2025-07-03",
-          "context": "Data Distillery",
-          "type": "neo4j",
-          "size":{
-            "zipped": "3.26 GB",
-            "unzipped": "21.85 GB"
-          },
-          "typeDetail": "Zip archive of ontology CSVs that can be used to generate a UBKG neo4j instance"
-        },
-        {
-          "name": "DD_no_BIOMARKER03Jan2025.zip",
-          "description": "03 Jan 2025 Data Distillery except for Biomarker",
-          "date": "2025-03-03",
-          "context": "Data Distillery",
-          "type": "csv",
-          "size":{
-            "zipped": "3.26 GB",
-            "unzipped": "21.85 GB"
-          },
-          "typeDetail": "Zip archive of ontology CSVs that can be used to generate a UBKG neo4j instance"
-        }]
-    },{
-      "Name": "Petagraph",
-        "files": [{
-            "name": "Petagraph_May5_v514.dump",
-            "description": "05 May 2024 v514 Petagraph release",
-            "date": "2024-05-05",
-            "context": "Petagraph",
-            "type": "dump",
-            "typeDetail": "neo4j dump of a Petagraph neo4j instance"
-          },
-          {
-            "name": "Petagraph_May5_v514.cypher",
-            "description": "05 May 2024 v514 Petagraph release",
-            "date": "2024-10-05",
-            "context": "Petagraph",
-            "type": "cypher",
-            "size":{
-              "zipped": "3.26 GB",
-              "unzipped": "21.85 GB"
-            },
-            "typeDetail": "cypher script to create the Petagraph neo4j instance"
-          },
-          {
-            "name": "Petagraph_May5_v514.json",
-            "description": "05 May 2024 v514 Petagraph release",
-            "date": "2024-09-05",
-            "context": "Petagraph",
-            "type": "dump",
-            "typeDetail": "JSON representation of the Petagraph data"
-          }]
-    }
-  ]
 
 
   
