@@ -10,3 +10,7 @@ margin-top: 60px;
 h1 {
 font-size:1.4em;
 }
+
+.fileTable tr{
+    border-bottom: 4px solid #ebebeb
+}
