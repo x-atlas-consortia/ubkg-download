@@ -37,7 +37,6 @@ const Home = (props: any) => {
     contexts: [],
     definitions: [],
   });
-
   const iconAssociations = {
     'neo4j': <GrDocker/> ,
     'csv':<FaFileCsv/>,
@@ -60,7 +59,7 @@ const Home = (props: any) => {
     size: {
       zipped?: string;
       unzipped?: string;
-    };
+    };    
   }
   interface TableData {
     name: string;
@@ -70,11 +69,6 @@ const Home = (props: any) => {
       files: File[];
     };
   }
-  type FileSet = {
-    name: string;
-    files: Array<any>;
-  }
-
 
   
   useEffect(() => {
@@ -140,36 +134,9 @@ const Home = (props: any) => {
         typeDetail: matchingType ? matchingType.description : null, // Add typeDetail field
       };
     });
-
-  function groupFilesByType(files:File[]) {
-    // Sorts out the index & type situation with ts
-    return files.reduce((acc: { [key: string]: File[] }, file) => {
-      if (!acc[file.type]) acc[file.type] = [];
-      acc[file.type].push(file);
-      return acc;
-    }, {} as { [key: string]: File[] });
-  }
-
-  function sortFilesInFileset(fileset:FileSet) {
-    const grouped = groupFilesByType(fileset.files);
-    const sortedTypes = Object.keys(grouped).sort();
-    const sortedFiles = sortedTypes.flatMap(type => sortFilesByDateDesc(grouped[type]));
-    return { ...fileset, files: sortedFiles };
-  }
-
-  function sortAllFilesets(filesets: FileSet[]) {
-    return filesets.map(sortFilesInFileset);
-  }
-
-
-  function sortFilesByDateDesc(files:File[]) {{
-    return files.slice().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }
-
-
     
     // Sort Out the Files
-  const groupedByContext = Object.values(
+    const groupedByContext = Object.values(
       filesWithTypeDetail.reduce((acc, file) => {
         if (!acc[file.context]) {
           acc[file.context] = { name: file.context, files: [] };
@@ -178,6 +145,7 @@ const Home = (props: any) => {
         return acc;
       }, {} as Record<string, { name: string; files: File[] }>)
     ) as { name: string; files: File[] }[];
+
     const sortedFilesets = sortAllFilesets(groupedByContext);
     console.debug('%c◉ sortedFilesets ', 'color:#00ff7b', sortedFilesets);
 
@@ -185,205 +153,229 @@ const Home = (props: any) => {
   }
 
 
-  function reset() {
-    localStorage.removeItem("umlsKey");
-    setUmlsKey('');
-    setHasAuth(false);
-    setError('');
+  function groupFilesByType(files:Array<any>) {
+    return files.reduce((acc, file) => {
+      if (!acc[file.type]) acc[file.type] = [];
+      acc[file.type].push(file);
+      return acc;
+    }, {});
   }
 
-  function updateKey(event:any) {
-    var value = event.target.value;
-    setUmlsKey(value.trim());
-  }
 
-  function fileIcon(type:string) {
-    return (
-      <Box sx={{width:"50px",height:"50px"}} className="typeIcon">
-        {iconAssociations[type as keyof typeof iconAssociations] || <FaTruck/>}
-      </Box> 
-    );
-  }
+function sortFilesByDateDesc(files:Array<any>) {
+  return files.slice().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
 
-  function tableBuilder(tableData: TableData) {
-    const { name, description, documentation_url } = tableData;
-    let files = tableData.data.files;
-    return (
-      <Box key = {name} sx={{ margin: "20px auto 0 auto",}}>
-        <Box sx={{
-          display: "flex",
-          width:"100%",
-          alignSelf: "flex-end",
-          borderTopLeftRadius: "4px",
-          borderTopRightRadius: "4px",
-          background: "hsl(0 0% 23.14%)", 
-          color: "white", 
-          padding: "10px"}}>
-          
-          <Box sx={{display: "flex", flexShrink:2, paddingRight:"20px"}}>
-            <h3 style={{margin:"0px"}}>{name}</h3>
-            <a href={documentation_url} style={{
-              color:"#fff"
-            }} target="_blank" rel="noopener noreferrer">
-            <LaunchIcon style={{width:"20px", marginLeft:"10px", alignSelf: "flex-end",}}/></a>
-          </Box>
-          
-          <Box sx={{display: "flex",alignSelf: 'flex-end'}}>
-            <Typography variant="caption" >{description}</Typography>
-          </Box>
+function sortFilesInFileset(fileset: { name: string; files: File[] }) {
+  const grouped = groupFilesByType(fileset.files);
+  const sortedTypes = Object.keys(grouped).sort();
+  const sortedFiles = sortedTypes.flatMap(type => sortFilesByDateDesc(grouped[type]));
+  return { ...fileset, files: sortedFiles };
+}
+
+function sortAllFilesets(filesets: { name: string; files: File[] }[]): { name: string; files: File[] }[] {
+  return filesets.map(sortFilesInFileset);
+}
+
+function reset() {
+  localStorage.removeItem("umlsKey");
+  setUmlsKey('');
+  setHasAuth(false);
+  setError('');
+}
+
+function updateKey(event:any) {
+  var value = event.target.value;
+  setUmlsKey(value.trim());
+}
+
+function fileIcon(type:string) {
+  return (
+    <Box sx={{width:"50px",height:"50px"}} className="typeIcon">
+      {iconAssociations[type as keyof typeof iconAssociations] || <FaTruck/>}
+    </Box> 
+  );
+}
+
+function tableBuilder(tableData: TableData) {
+  const { name, description, documentation_url } = tableData;
+  let files = tableData.data.files;
+  let setname = tableData.name;
+  return (
+    <Box key = {name} sx={{ margin: "20px auto 0 auto",}}>
+      <Box sx={{
+        display: "flex",
+        width:"100%",
+        alignSelf: "flex-end",
+        borderTopLeftRadius: "4px",
+        borderTopRightRadius: "4px",
+        background: "hsl(0 0% 23.14%)", 
+        color: "white", 
+        padding: "10px"}}>
+        
+        <Box sx={{display: "flex", flexShrink:2, paddingRight:"20px"}}>
+          <h3 style={{margin:"0px"}}>{name}</h3>
+          <a href={documentation_url} style={{
+            color:"#fff"
+          }} target="_blank" rel="noopener noreferrer">
+          <LaunchIcon style={{width:"20px", marginLeft:"10px", alignSelf: "flex-end",}}/></a>
         </Box>
         
-        <TableContainer 
-          sx={{ 
-          minWidth: "550px",
-          display: "block",
-          width:'100%',
-          backgroundColor: "#f5f5f5",
-          border: "2px solid #5c5c5c",}}>
-          <Table aria-label="simple table" size="small" sx={{tableLayout: "fixed"}} className="fileTable">
-            <TableHead sx={{
-              backgroundColor: "#ebebeb",
-              borderBottom:"1px solid #5c5c5c",
-              "& th": {
-                fontWeight: "bold",
-                color: "#444a65"}}}>
-              <TableRow>
-                <TableCell align="left" sx={{width:"84px!important"}} > </TableCell>
-                <TableCell align="left" sx={{width:"105px!important"}}> Date </TableCell>
-                <TableCell align="left" sx={{width:"249px!important"}}> File </TableCell>
-                <TableCell align="left" sx={{width:"533px!important"}}> Type </TableCell>
-                <TableCell align="left" sx={{width:"402px!important"}}> Description </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            {files.map((row:File, index: number) => (
-              <TableRow key={row.name + "-" + index} sx={{"&:last-child td, &:last-child th": {border: 0}}} >
-                <TableCell sx={{fontSize: "2rem!important"}}>{fileIcon(row.type)}</TableCell>
-                <TableCell sx={{fontSize: "0.8rem!important"}}>{row.date}</TableCell>
-                <TableCell sx={{fontSize: "0.8rem!important"}}>
-                  <a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}${row.name}?umls-key=${umlsKey}`}>{row.name}</a><br />
-                  <span style={{color: "#555",verticalAlign: "sub",fontSize:"1rem!important", marginBottom:"10px"}}>
-                    {row.size && row.size.zipped && (<><FaFileArchive style={{margin:"0 3px 0 0px"}} />{row.size.zipped}</>)}
-                    {row.size && row.size.unzipped && (<><FaBoxOpen style={{margin:"0 2px 0  10px"}} />{row.size.unzipped}</>)}
-                  </span>
-                </TableCell>
-                <TableCell sx={{fontSize: "0.8rem!important"}}>{row.typeDetail}</TableCell>
-                <TableCell sx={{fontSize: "0.8rem!important"}}>{row.description}</TableCell>
-              </TableRow>
-            ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Box sx={{
-          display: "flex",
-          width:"100%",
-          fontSize: "0.8rem",
-          alignSelf: "flex-end",
-          borderBottomLeftRadius: "4px",
-          borderBottomRightRadius: "4px",
-          background: "#595959",
-          border: "2px  solid #5c5c5c",
-          borderTop:"0px",
-          color: "white", 
-          padding: "2px 8px"}}>
-            Total Files: {files.length}
+        <Box sx={{display: "flex",alignSelf: 'flex-end'}}>
+          <Typography variant="caption" >{description}</Typography>
         </Box>
-      </Box>)
-  }
-          
-  function renderTables() {
-    return (
-      Object.keys(fileList).map((key, index) => {
-        // name, data, columns
-        let tableSet = {
-          key: index,
-          name: fileList[Number(key)].name,
-          data: fileList[Number(key)],
-          columns: [
-            { id: "name", label: "Name", },
-            { id: "description", label:"Description",},
-            { id: "date", label:"Date",},
-            { id: "context", label:"Context",},
-            { id: "documentation", label:"Documentation",},
-          ],
-          description:schema.contexts[Number(key)].description,
-          documentation_url:schema.contexts[Number(key)].documentation_url,
-        };
-        return tableBuilder(tableSet);
-      })
-    )
-  }
-
-  function renderLicenceInfo() {
-    return (
-      <Alert className="alert alert-info" severity="info" role="alert" sx={{marginTop: "25px"}}>
-        <h2 style={{marginTop:"-5px"}}>License requirements</h2>
-        <Typography>
-        The <a href="https://ubkg.docs.xconsortia.org/" target="_blank">Unified Biomedical Knowledge Graph (UBKG)</a> includes content from biomedical vocabularies that are maintained by the <a href="https://uts.nlm.nih.gov/uts/umls/home" target="_blank"> </a>National Library of Medicine. The use of content from the UMLS is governed by the <a href="https://uts.nlm.nih.gov/uts/assets/LicenseAgreement.pdf" target="_blank">UMLS License Agreement</a>.
-        </Typography>
-        <Typography> Use of the UMLS content in the UBKG requires two licenses:</Typography>
-        <ol>
-          <li>The University of Pittsburgh distributes content originating from the UMLS by means of a distributor license.</li>
-          <li>Consumers of the UBKG have access to UMLS content through the license that is part of their <a href="https://uts.nlm.nih.gov/uts/" target="_blank">UMLS Technology Services</a> (UTS) accounts.</li>
-        </ol>
-        <Typography>
-        This site combines the API key from the University of Pittsburgh with the API key from a user to authenticate a user's request to download the UBKG. The user must provide the API for their UTS account to the UBKG Download site.
-        </Typography>
-        <h3>To obtain a UTS API key</h3>
-        <ol>
-          <li>Create a <a href="https://uts.nlm.nih.gov/uts/" target="_blank"> UTS</a> user profile.</li>
-          <li>Generate an API key.</li>
-        </ol>
+      </Box>
+      
+      <TableContainer 
+        sx={{ 
+        minWidth: "550px",
+        display: "block",
+        width:'100%',
+        backgroundColor: "#f5f5f5",
+        border: "2px solid #5c5c5c",}}>
+        <Table aria-label="simple table" size="small" sx={{tableLayout: "fixed"}} className="fileTable">
+          <TableHead sx={{
+            backgroundColor: "#ebebeb",
+            borderBottom:"1px solid #5c5c5c",
+            "& th": {
+              fontWeight: "bold",
+              color: "#444a65"}}}>
+            <TableRow>
+              <TableCell align="left" sx={{width:"84px!important"}} > </TableCell>
+              <TableCell align="left" sx={{width:"105px!important"}}> Date </TableCell>
+              <TableCell align="left" sx={{width:"249px!important"}}> File </TableCell>
+              <TableCell align="left" sx={{width:"533px!important"}}> Type </TableCell>
+              <TableCell align="left" sx={{width:"402px!important"}}> Description </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+          {files.map((row:File, index: number) => (
+            <TableRow key={row.name + "-" + index} sx={{"&:last-child td, &:last-child th": {border: 0}}} >
+              <TableCell sx={{fontSize: "2rem!important"}}>{fileIcon(row.type)}</TableCell>
+              <TableCell sx={{fontSize: "0.8rem!important"}}>{row.date}</TableCell>
+              <TableCell sx={{fontSize: "0.8rem!important"}}>
+                <a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}${row.name}?umls-key=${umlsKey}`}>{row.name}</a><br />
+                <span style={{color: "#555",verticalAlign: "sub",fontSize:"1rem!important", marginBottom:"10px"}}>
+                  {row.size && row.size.zipped && (<><FaFileArchive style={{margin:"0 3px 0 0px"}} />{row.size.zipped}</>)}
+                  {row.size && row.size.unzipped && (<><FaBoxOpen style={{margin:"0 2px 0  10px"}} />{row.size.unzipped}</>)}
+                </span>
+              </TableCell>
+              <TableCell sx={{fontSize: "0.8rem!important"}}>{row.typeDetail}</TableCell>
+              <TableCell sx={{fontSize: "0.8rem!important"}}>{row.description}</TableCell>
+            </TableRow>
+          ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    <Box sx={{
+      display: "flex",
+      width:"100%",
+      fontSize: "0.8rem",
+      alignSelf: "flex-end",
+      borderBottomLeftRadius: "4px",
+      borderBottomRightRadius: "4px",
+      background: "#595959",
+      border: "2px  solid #5c5c5c",
+      borderTop:"0px",
+      color: "white", 
+      padding: "2px 8px"}}>
+        Total Files: {files.length}
+      </Box>
+    </Box>)
+}{}
         
-      {!hasAuth && (
-        <>
-          <Typography>Please provide your UMLS Key to access the downloadable files </Typography>
-          <TextField
-            label="UMLS Key"
-            size="small"
-            margin="dense"
-            multiline
-            fullWidth
-            id="umlsKey"
-            value={umlsKey}
-            placeholder={umlsKey}
-            disabled={umlsKey.length > 35 ? true : false}
-            onChange={updateKey}
-            sx={{
-              backgroundColor:"white"
-            }}
-          />{" "}
-          <br /> <br />
-          <Button 
-            variant="contained" 
-            onClick={() => authCheck(umlsKey)} 
-            sx={{ float: "right"}}>
-              Submit
-          </Button>
-          <Button 
-            variant="outlined"
-            disabled={umlsKey.length > 0 ? false : true} 
-            onClick={() => reset()} 
-            sx={{
-              float: "left", 
-              background:'#f5f5f580',
-              '&:hover': {backgroundColor: "#ffffffff"}}}>
-              Reset
-          </Button>
-        </>
-      )}
-      </Alert>
-    )
-  }
+function renderTables() {
+  return (
+    Object.keys(fileList).map((key, index) => {
+      // name, data, columns
+      let tableSet = {
+        key: index,
+        name: fileList[Number(key)].name,
+        data: fileList[Number(key)],
+        columns: [
+          { id: "name", label: "name", },
+          { id: "description", label:"Description",},
+          { id: "date", label:"Date",},
+          { id: "context", label:"Context",},
+          { id: "documentation", label:"Documentation",},
+        ],
+        description:schema.contexts[Number(key)].description,
+        documentation_url:schema.contexts[Number(key)].documentation_url,
+      };
+      return tableBuilder(tableSet);
+    })
+  )
+}
 
-  function renderFileView() {
-    return (
-        <Paper elevation={0} sx={{ margin: "20px auto", padding: "20px 20px", }}>
-          {renderTables()}
-        </Paper>
-    )
-  } 
+function renderLicenceInfo() {
+  return (
+    <Alert className="alert alert-info" severity="info" role="alert" sx={{marginTop: "25px"}}>
+      <h2 style={{marginTop:"-5px"}}>License requirements</h2>
+      <Typography>
+      The <a href="https://ubkg.docs.xconsortia.org/" target="_blank">Unified Biomedical Knowledge Graph (UBKG)</a> includes content from biomedical vocabularies that are maintained by the <a href="https://uts.nlm.nih.gov/uts/umls/home" target="_blank"> </a>National Library of Medicine. The use of content from the UMLS is governed by the <a href="https://uts.nlm.nih.gov/uts/assets/LicenseAgreement.pdf" target="_blank">UMLS License Agreement</a>.
+      </Typography>
+      <Typography> Use of the UMLS content in the UBKG requires two licenses:</Typography>
+      <ol>
+        <li>The University of Pittsburgh distributes content originating from the UMLS by means of a distributor license.</li>
+        <li>Consumers of the UBKG have access to UMLS content through the license that is part of their <a href="https://uts.nlm.nih.gov/uts/" target="_blank">UMLS Technology Services</a> (UTS) accounts.</li>
+      </ol>
+      <Typography>
+      This site combines the API key from the University of Pittsburgh with the API key from a user to authenticate a user's request to download the UBKG. The user must provide the API for their UTS account to the UBKG Download site.
+      </Typography>
+      <h3>To obtain a UTS API key</h3>
+      <ol>
+        <li>Create a <a href="https://uts.nlm.nih.gov/uts/" target="_blank"> UTS</a> user profile.</li>
+        <li>Generate an API key.</li>
+      </ol>
+      
+    {!hasAuth && (
+      <>
+        <Typography>Please provide your UMLS Key to access the downloadable files </Typography>
+        <TextField
+          label="UMLS Key"
+          size="small"
+          margin="dense"
+          multiline
+          fullWidth
+          id="umlsKey"
+          value={umlsKey}
+          placeholder={umlsKey}
+          disabled={umlsKey.length > 35 ? true : false}
+          onChange={updateKey}
+          sx={{
+            backgroundColor:"white"
+          }}
+        />{" "}
+        <br /> <br />
+        <Button 
+          variant="contained" 
+          onClick={() => authCheck(umlsKey)} 
+          sx={{ float: "right"}}>
+            Submit
+        </Button>
+        <Button 
+          variant="outlined"
+          disabled={umlsKey.length > 0 ? false : true} 
+          onClick={() => reset()} 
+          sx={{
+            float: "left", 
+            background:'#f5f5f580',
+            '&:hover': {backgroundColor: "#ffffffff"}}}>
+            Reset
+        </Button>
+      </>
+    )}
+    </Alert>
+  )
+}
 
+function renderFileView() {
+  return (
+      <Paper elevation={0} sx={{ margin: "20px auto", padding: "20px 20px", }}>
+        {renderTables()}
+      </Paper>
+  )
+}          
   function logout() {
     if (hasAuth) {
       return (<Box  sx={{ float: "right" }}><Typography sx={{display:"inline-block"}}>{umlsKey}</Typography> <Button variant="contained" onClick={reset}>Logout</Button></Box>);
@@ -402,7 +394,6 @@ const Home = (props: any) => {
   }
 
 
-  
   return (
     <Box>
       {topNav()}
@@ -419,9 +410,7 @@ const Home = (props: any) => {
       </Container>
     </Box>
   );
-
 };
 
-  
-}
 export default Home;
+          
