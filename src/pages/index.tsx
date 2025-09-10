@@ -70,7 +70,6 @@ const Home = (props: any) => {
     };
   }
 
-  
   useEffect(() => {
     console.debug('%c◉ useEffect LS Get, sets umlskey ', 'color:#00ff7b', );
     const ls = localStorage.getItem("umlsKey");
@@ -286,25 +285,28 @@ function tableBuilder(tableData: TableData) {
         
 function renderTables() {
   return (
-    Object.keys(fileList).map((key, index) => {
-      // name, data, columns
+    fileList.map((fileset, index) => {
+      // Find the matching context object by name
+      const contextObj = schema.contexts.find(
+        (ctx: any) => ctx.name === fileset.name
+      );
       let tableSet = {
         key: index,
-        name: fileList[Number(key)].name,
-        data: fileList[Number(key)],
+        name: fileset.name,
+        data: fileset,
         columns: [
-          { id: "name", label: "name", },
-          { id: "description", label:"Description",},
-          { id: "date", label:"Date",},
-          { id: "context", label:"Context",},
-          { id: "documentation", label:"Documentation",},
+          { id: "name", label: "name" },
+          { id: "description", label: "Description" },
+          { id: "date", label: "Date" },
+          { id: "context", label: "Context" },
+          { id: "documentation", label: "Documentation" },
         ],
-        description:schema.contexts[Number(key)].description,
-        documentation_url:schema.contexts[Number(key)].documentation_url,
+        description: contextObj?.description || "",
+        documentation_url: contextObj?.documentation_url || "",
       };
       return tableBuilder(tableSet);
     })
-  )
+  );
 }
 
 function renderLicenceInfo() {
@@ -371,9 +373,9 @@ function renderLicenceInfo() {
 
 function renderFileView() {
   return (
-      <Paper elevation={0} sx={{ margin: "20px auto", padding: "20px 20px", }}>
-        {renderTables()}
-      </Paper>
+    <Paper elevation={0} sx={{ margin: "20px auto", padding: "20px 20px", }}>
+      {renderTables()}
+    </Paper>
   )
 }          
   function logout() {
