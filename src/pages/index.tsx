@@ -24,6 +24,7 @@ import { BsBoxSeamFill } from "react-icons/bs";
 import { FaFileCsv } from "react-icons/fa6";
 import { FaFileArchive } from "react-icons/fa";
 import { FaBoxOpen } from "react-icons/fa";
+import { SiBento } from "react-icons/si";
 
 const Home = (props: any) => {
   // var [serverMode, setServerMode] = useState("test");
@@ -42,6 +43,7 @@ const Home = (props: any) => {
     'csv':<FaFileCsv/>,
     'dump':<FaTruck/>,
     'box':<BsBoxSeamFill/>,
+    'ubkgbox':<SiBento />
   }
   interface Schema {
     files: Array<any>;
