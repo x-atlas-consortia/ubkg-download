@@ -254,8 +254,8 @@ function tableBuilder(tableData: TableData) {
             <TableRow key={row.name + "-" + index} sx={{"&:last-child td, &:last-child th": {border: 0}}} >
               <TableCell sx={{fontSize: "2rem!important"}}>{fileIcon(row.type)}</TableCell>
               <TableCell sx={{fontSize: "0.8rem!important"}}>{row.date}</TableCell>
-              <TableCell sx={{fontSize: "0.8rem!important"}}>
-                <a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}${row.name}?umls-key=${umlsKey}`}>{row.name}</a><br />
+              <TableCell sx={{fontSize: "0.8rem!important"}} style={{wordWrap:"break-word"}}>
+                <p><a href={`${process.env.NEXT_PUBLIC_ASSETS_URL_BASE}${row.name}?umls-key=${umlsKey}`}>{row.name}</a></p><br />
                 <span style={{color: "#555",verticalAlign: "sub",fontSize:"1rem!important", marginBottom:"10px"}}>
                   {row.size && row.size.zipped && (<><FaFileArchive style={{margin:"0 3px 0 0px"}} />{row.size.zipped}</>)}
                   {row.size && row.size.unzipped && (<><FaBoxOpen style={{margin:"0 2px 0  10px"}} />{row.size.unzipped}</>)}
