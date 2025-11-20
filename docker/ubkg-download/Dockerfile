@@ -1,37 +1,39 @@
 # Parent image
-FROM hubmap/api-base-image:1.0.0
+FROM node:24-bookworm-slim
 
-LABEL description="HuBMAP UBKG Download"
+LABEL description="UBKG Download"
+
+ARG HOST_GID
+ARG HOST_UID
+ARG IMAGE_USER
 
 # Change to directory that contains the Dockerfile
 WORKDIR /usr/src/app
 
-# Copy from host to image
 COPY . .
 
-# Reduce the number of layers in image by minimizing the number of separate RUN commands
-# Add Node.js stable release Yum Repository
-# Install Node.js v20.x (includes npm) based on https://github.com/nodesource/distributions?tab=readme-ov-file#as-root-2
-# Update to latest npm
+# Install curl to be used healthcheck
+# Create the non-root user
 # Copy the entrypoint script and make it executible
-# Clean all yum cache
-RUN curl -fsSL https://rpm.nodesource.com/setup_20.x | bash - && \
-    yum install -y nodejs && \
-    npm install npm@latest -g && \
-    cp /usr/src/app/entrypoint.sh /usr/local/bin/entrypoint.sh && \
-    chmod +x /usr/local/bin/entrypoint.sh && \
-    yum clean all
-    
+# Ensure non-root user has access to the target directory
+RUN apt-get update -y && \
+    apt-get install curl -y && \
+    groupadd -g ${HOST_GID} ${IMAGE_USER} && \
+    useradd -u ${HOST_UID} -m -g ${HOST_GID} -s /bin/bash ${IMAGE_USER} && \
+    chown -R ${IMAGE_USER}:${IMAGE_USER} /usr/src/app
+
 # Change to source code directory
 WORKDIR /usr/src/app/src
 
-# Install npm dependencies and build app
-RUN npm install && \
+# Update to latest npm, install dependencies, and build app
+RUN npm install npm@latest -g && \
+    npm install && \
     npm run build
 
-# The EXPOSE instruction informs Docker that the container listens on the specified network ports at runtime. 
+USER ${IMAGE_USER}
+
+# Inform Docker that the container listens on the specified network ports at runtime. 
 EXPOSE 3000
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
+# Start the app
 CMD ["npm", "run", "start"]

@@ -76,7 +76,7 @@ else
 
         echo 'Checks complete, all good :)'
     elif [ "$1" = "config" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p ubkg-download config
+        docker compose -f docker-compose.yml -p ubkg-download config
     elif [ "$1" = "build" ]; then
         # Delete the copied source code dir if exists
         if [ -d "ubkg-download/src" ]; then
@@ -91,12 +91,12 @@ else
         # Also explicitly copy the .env file
         cp ../src/.env ubkg-download/src
 
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p ubkg-download build
+        docker compose -f docker-compose.yml -p ubkg-download build --no-cache
     elif [ "$1" = "start" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p ubkg-download up -d
+        docker compose -f docker-compose.yml -p ubkg-download up -d
     elif [ "$1" = "stop" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p ubkg-download stop
+        docker compose -f docker-compose.yml -p ubkg-download stop
     elif [ "$1" = "down" ]; then
-        docker-compose -f docker-compose.yml -f docker-compose.development.yml -p ubkg-download down
+        docker compose -f docker-compose.yml -p ubkg-download down
     fi
 fi

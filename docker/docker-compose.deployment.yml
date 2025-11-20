@@ -1,7 +1,0 @@
-version: "3.7"
-
-services:
-
-  ubkg-download:
-    # Use the published image and tag from DockerHub
-    image: hubmap/ubkg-download:${UBKG_DOWNLOAD_VERSION:?err}

@@ -1,9 +1,15 @@
-version: "3.7"
-
-# Will use the hostname when talking between services on the same network
 services:
 
   ubkg-download:
+    build:
+      context: ./ubkg-download
+      args:
+        - HOST_GID=${HOST_GID:-1001}
+        - HOST_UID=${HOST_UID:-1001}
+        - IMAGE_USER=${IMAGE_USER:-ubkg}
+    # Build the image with name and tag
+    # Exit with an error message containing err if unset or empty in the environment
+    image: hubmap/ubkg-download:${UBKG_DOWNLOAD_VERSION:?err}
     hostname: ubkg-download
     container_name: ubkg-download
     ports:
@@ -14,10 +20,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    environment:
-      # UID and GID 1001 to match the hive user by default
-      - HOST_GID=${HOST_GID:-1001}
-      - HOST_UID=${HOST_UID:-1001}
     init: true
     restart: always
     networks:
