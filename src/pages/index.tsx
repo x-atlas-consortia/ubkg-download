@@ -28,11 +28,11 @@ import { SiBento } from "react-icons/si";
 
 const Home = (props: any) => {
   // var [serverMode, setServerMode] = useState("test");
-  var [umlsKey, setUmlsKey] = useState('');
-  var [hasAuth, setHasAuth] = useState(false);
-  var [error, setError] = useState('');
-  var [fileList, setFileList] = useState<{ name: string; files: File[] }[]>([]);
-  var [schema, setSchema] = useState<Schema>({
+  const [umlsKey, setUmlsKey] = useState('');
+  const [hasAuth, setHasAuth] = useState(false);
+  const [error, setError] = useState('');
+  const [fileList, setFileList] = useState<{ name: string; files: File[] }[]>([]);
+  const [schema, setSchema] = useState<Schema>({
     files: [],
     types: [],
     contexts: [],
@@ -114,7 +114,7 @@ const Home = (props: any) => {
   }
   
   function fileGet(umlsKeyST:string) {
-    let key = umlsKeyST || umlsKey;
+    const key = umlsKeyST || umlsKey;
     FileListProviderUpgrade(key)
     .then((res) => {
       fileSort(res.files, res.types, res.contexts, res.definitions);
@@ -186,7 +186,7 @@ function reset() {
 }
 
 function updateKey(event:any) {
-  var value = event.target.value;
+  const value = event.target.value;
   setUmlsKey(value.trim());
 }
 
@@ -200,8 +200,8 @@ function fileIcon(type:string) {
 
 function tableBuilder(tableData: TableData) {
   const { name, description, documentation_url } = tableData;
-  let files = tableData.data.files;
-  let setname = tableData.name;
+  const files = tableData.data.files;
+  const setname = tableData.name;
   return (
     <Box key = {name} sx={{ margin: "20px auto 0 auto",}}>
       <Box sx={{
@@ -292,7 +292,7 @@ function renderTables() {
       const contextObj = schema.contexts.find(
         (ctx: any) => ctx.name === fileset.name
       );
-      let tableSet = {
+      const tableSet = {
         key: index,
         name: fileset.name,
         data: fileset,
@@ -324,7 +324,7 @@ function renderLicenceInfo() {
         <li>Consumers of the UBKG have access to UMLS content through the license that is part of their <a href="https://uts.nlm.nih.gov/uts/" target="_blank">UMLS Technology Services</a> (UTS) accounts.</li>
       </ol>
       <Typography>
-      This site combines the API key from the University of Pittsburgh with the API key from a user to authenticate a user's request to download the UBKG. The user must provide the API for their UTS account to the UBKG Download site.
+      This site combines the API key from the University of Pittsburgh with the API key from a user to authenticate a user&apos;s request to download the UBKG. The user must provide the API for their UTS account to the UBKG Download site.
       </Typography>
       <h3>To obtain a UTS API key</h3>
       <ol>
@@ -417,4 +417,3 @@ function renderFileView() {
 };
 
 export default Home;
-          
